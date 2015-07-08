@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Memory Leak Test</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		#app {
+			width: 700px;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" class="container">
+		<script src="../../node_modules/steal/steal.js" main="can/view/autorender/"></script>
+		<script type='text/stache' id="demo" can-autorender>
+			<h1>can.validate Demo</h1>
+
+			<p>The value <code>myVal</code> should be at least 6 characters long.
+			The value <code>myNum</code> should just be a number greater than 5.</p>
+
+			<p>Current value of <code>myVal</code>: <code>[{{myVal}}]</code><br>
+			Current value of <code>myNum</code>: <code>[{{myNum}}]</code></p>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Validation Test</h3>
+				</div>
+				<div class="panel-body">
+					<label for="test1">MyVal</label>
+					<div class="input-group">
+						<input class="form-control" id="test" type="text" can-value="myVal">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
+						</span>
+					</div>
+					<label for="test2">MyNum</label>
+					<div class="input-group">
+						<input class="form-control" id="test2" type="text" can-value="myNum">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
+						</span>
+					</div>
+				</div>
+				<ul class="list-group">
+			{{#myMap.errors}}
+				{{#myVal}}
+				<li class="list-group-item list-group-item-danger">{{.}}</li>
+				{{/myVal}}
+				{{#myNum}}
+				<li class="list-group-item list-group-item-danger">{{.}}</li>
+				{{/myNum}}
+			{{/myMap.errors}}
+				</ul>
+			</div>
+
+		</script>
+	</div>
+	<script type='text/javascript'>
+		steal('can', 'can-validate/', 'can-validate/shims/validatejs.shim', function(can){
+
+			can.$('#demo').viewModel({
+				myVal: 'testing testing',
+				myNum: 100,
+				validateField: function () {
+					console.log(arguments);
+				}
+			});
+		});
+	</script>
+</body>
+</html>

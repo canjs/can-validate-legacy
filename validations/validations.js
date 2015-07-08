@@ -1,43 +1,50 @@
 //Copies old map validation plugin stuff
-steal('can/util', function (can) {
+steal('can', function (can) {
 
 	//validations object is by property.  You can have validations that
 	//span properties, but this way we know which ones to run.
 	//  proc should return true if there's an error or the error message
-	var validate = function (attrNames, options, proc) {
-		// normalize argumetns
-		if (!proc) {
-			proc = options;
-			options = {};
-		}
-		options = options || {};
-		attrNames = typeof attrNames === 'string' ? [attrNames] : can.makeArray(attrNames);
-		// run testIf if it exists
-		if (options.testIf && !options.testIf.call(this)) {
-			return;
-		}
-		var self = this;
-		can.each(attrNames, function (attrName) {
-			// Add a test function for each attribute
-			if (!self.validations[attrName]) {
-				self.validations[attrName] = [];
+
+	return can.Construct.extend({
+		once: function (value, options, key) {
+			var errors = [];
+			// normalize argumetns
+			if (!proc) {
+				proc = options;
+				options = {};
 			}
-			self.validations[attrName].push(function (newVal) {
+
+			errors.push(function (newVal) {
 				// if options has a message return that, otherwise, return the error
 				var res = proc.call(this, newVal, attrName);
 				return res === undefined ? undefined : options.message || res;
 			});
-		});
-	};
-
-	return can.Map.extend({
-		setup: function (superClass) {
-			oldSetup.apply(this, arguments);
-			if (!this.validations || superClass.validations === this.validations) {
-				this.validations = {};
-			}
 		},
-		validate: validate,
+
+		validate: function (values, options) {
+			var errors=[];
+			options = options || {};
+
+			can.each(values, function (attrName) {
+				var opts = options[attrName];
+				// Add a test function for each attribute
+				if (!errors[attrName]) {
+					errors[attrName] = [];
+				}
+
+				opts.each(function (opt, key) {
+					var validator = 'validate' + can.capitalize(key) + 'Of';
+
+					
+				});
+
+				errors[attrName].push(function (newVal) {
+					// if options has a message return that, otherwise, return the error
+					var res = proc.call(this, newVal, attrName);
+					return res === undefined ? undefined : options.message || res;
+				});
+			});
+		},
 
 		validationMessages: {
 			format: 'is invalid',
@@ -100,5 +107,5 @@ steal('can/util', function (can) {
 				}
 			});
 		}
-	});
+	},{});
 });

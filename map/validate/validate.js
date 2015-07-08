@@ -26,16 +26,17 @@ steal('can/util', 'can-validate', 'can/map', function (can) {
 		// If validation options set, run validation
 		if(validateOpts) {
 			// run validation
-			errors = can.validate.once(prop, value, validateOpts);
+			errors = can.validate.once(value, validateOpts, prop);
 
-			if(errors.length) {
+			if(errors && errors.length > 0) {
+
 				// Create errors property if doesn't exist
 				if(!this.attr('errors')) {
 					this.attr('errors', {});
 				}
 
 				// Apply error response to observable
-				this.attr('errors')[prop] = errors;
+				this.attr('errors').attr(prop,errors);
 
 				// Don't set value if `precheck` is true
 				if (validateOpts.precheck && validateOpts.precheck === true) {
@@ -43,8 +44,8 @@ steal('can/util', 'can-validate', 'can/map', function (can) {
 				}
 			} else {
 				// clear errors for this property if they exist
-				if(this.attr('errors') && this.attr('errors')[prop]) {
-					delete this.attr('errors')[prop];
+				if(this.attr('errors') && this.attr('errors').attr(prop) ) {
+					this.attr('errors').removeAttr(prop);
 				}
 			}
 		}
