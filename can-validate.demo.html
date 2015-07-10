@@ -28,43 +28,61 @@
 					<h3 class="panel-title">Validation Test</h3>
 				</div>
 				<div class="panel-body">
-					<label for="test1">MyVal</label>
-					<div class="input-group">
-						<input class="form-control" id="test" type="text" can-value="myVal">
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
-						</span>
-					</div>
-					<label for="test2">MyNum</label>
-					<div class="input-group">
-						<input class="form-control" id="test2" type="text" can-value="myNum">
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
-						</span>
-					</div>
+					<form>
+						<label for="test1">MyVal <span class="text-danger"></span></label>
+						<div class="input-group" {{data 'field' 'myVal'}}>
+							<input class="form-control" id="test1" type="text" can-value="myVal">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
+							</span>
+						</div>
+						<label for="test2">MyNum <span class="text-danger"></span></label>
+						<div class="input-group" {{data 'field' 'myNum'}}>
+							<input class="form-control" id="test2" type="text" can-value="myNum">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" can-click="validateField">Validate</button>
+							</span>
+						</div>
+					</form>
 				</div>
-				<ul class="list-group">
-			{{#myMap.errors}}
-				{{#myVal}}
-				<li class="list-group-item list-group-item-danger">{{.}}</li>
-				{{/myVal}}
-				{{#myNum}}
-				<li class="list-group-item list-group-item-danger">{{.}}</li>
-				{{/myNum}}
-			{{/myMap.errors}}
-				</ul>
 			</div>
 
 		</script>
 	</div>
 	<script type='text/javascript'>
-		steal('can', 'can-validate/', 'can-validate/shims/validatejs.shim', function(can){
+		steal('can','can-validate/can-validate', 'can-validate/shims/validatejs.shim', function(can){
+			var validations = {
+				myVal: {
+					required: true,
+					length: {
+						minimum: 6
+					}
+				},
+				myNum: {
+					required: true,
+					numericality: {
+						greaterThan: 5
+					}
+				}
+			};
 
 			can.$('#demo').viewModel({
 				myVal: 'testing testing',
 				myNum: 100,
-				validateField: function () {
-					console.log(arguments);
+				errors: [],
+				validateField: function (ctx, $el) {
+					var $parent = $el.parents('.input-group'),
+						$label = can.$('label[for=' + $parent.find('.form-control').attr('id') + ']'),
+						val = $parent.data('field');
+
+					var errors = can.validate.once(this.attr(val), validations[val]);
+					if (errors) {
+						$parent.addClass('has-error');
+						$label.find('.text-danger').text(errors[0]);
+					} else {
+						$parent.removeClass('has-error');
+						$label.find('.text-danger').text('');
+					}
 				}
 			});
 		});
