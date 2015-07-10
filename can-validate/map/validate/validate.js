@@ -1,5 +1,29 @@
+/**
+* @module {?} can.Map.validate Map Plugin
+* @parent can-validate
+*
+* @description The can.Map plugin will works alongside can.Map.define to add validation
+* to properties on a can.Map. Importing the plugin, validation library, and a shim will
+* allow the ability to dynamically check values against validation configuration. errors
+* are stored on the can.Map instance and are observable.
+*
+* @body
+*
+* ## Initialization
+* Import the validation library, validate plugin and a shim to immediately use the
+* can.Map.validate plugin.
+* ```js
+* import 'validatejs';
+* import 'can-validate/map/validate';
+* import 'can-validate/shims/validatejs.shim';
+*```
+*
+* @demo ./can-validate/map/validate/demo.html
+*
+*
+*/
+
 import can from 'can';
-//import 'can-validate/can-validate';
 
 var proto = can.Map.prototype,
 	oldSet = proto.__set;
@@ -20,7 +44,10 @@ var getPropDefineBehavior = function(behavior, attr, define) {
 	}
 };
 
+// Override the prototype's __set with a more validate-y one.
 proto.__set = function (prop, value, current, success, error) {
+
+	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true,
 		validateOpts = getPropDefineBehavior("validate", prop, this.define),
 		errors;
@@ -30,6 +57,7 @@ proto.__set = function (prop, value, current, success, error) {
 		// run validation
 		errors = can.validate.once(value, validateOpts, prop);
 
+		// Process errors if we got them
 		if(errors && errors.length > 0) {
 
 			// Create errors property if doesn't exist
@@ -52,6 +80,7 @@ proto.__set = function (prop, value, current, success, error) {
 		}
 	}
 
+	// Call old __set, in most cases, this will be the define plugin's set.
 	if (allowSet) {
 		oldSet.call(this, prop, value, current, success, error);
 	}

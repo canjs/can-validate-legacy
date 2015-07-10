@@ -1,3 +1,13 @@
+/**
+* @module {can.Construct} validations Validations
+* @parent can-validate-library
+* @description
+* HEYO!
+*
+*
+*/
+
+
 //Copies old map validation plugin stuff
 steal('can', function (can) {
 
@@ -35,7 +45,7 @@ steal('can', function (can) {
 				opts.each(function (opt, key) {
 					var validator = 'validate' + can.capitalize(key) + 'Of';
 
-					
+
 				});
 
 				errors[attrName].push(function (newVal) {

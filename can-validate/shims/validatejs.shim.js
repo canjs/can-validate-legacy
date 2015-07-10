@@ -1,3 +1,12 @@
+/**
+* @module {can.Construct} validatejs-shim ValidateJS Shim
+* @parent can-validate-shims
+* @description
+* HEYO!
+*
+*
+*/
+
 import can from 'can';
 import validatejs from 'validate.js';
 
