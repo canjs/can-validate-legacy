@@ -13,7 +13,7 @@
 </head>
 <body>
 	<div id="app" class="container">
-		<script src="../../node_modules/steal/steal.js" main="can/view/autorender/"></script>
+		<script src="../../../node_modules/steal/steal.js" main="can/view/autorender/"></script>
 		<script type='text/stache' id="demo" can-autorender>
 			<h1>can.Map Validate Plugin Demo</h1>
 
@@ -52,7 +52,7 @@
 		</script>
 	</div>
 	<script type='text/javascript'>
-		steal('can', 'can-validate/can-validate', 'can/map/define/', 'can-validate/map/validate', 'can-validate/shims/validatejs.shim', function(can){
+		steal('can', 'can-validate/', 'can/map/define/', 'can-validate/map/validate', 'can-validate/shims/validatejs.shim', function(can){
 
 			var TestMap = can.Map.extend({
 				define: {
