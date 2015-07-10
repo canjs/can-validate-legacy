@@ -2,7 +2,7 @@
     "name": "can-validate",
     "version": "0.0.1",
     "description": "",
-    "main": "can-validate.js",
+    "main": "can-validate/can-validate.js",
     "directories": {
         "doc": "docs"
     },
