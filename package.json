@@ -3,8 +3,9 @@
 	"version": "0.0.1",
 	"description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
 	"scripts": {
-		"test": "testee --browsers firefox test.html",
-		"prepublish": "node ./stealBuild.js",
+        "build": "node ./stealBuild.js",
+		"test": "testee --browsers firefox can-validate.test.html",
+		"prepublish": "npm run build",
 		"publish": "git push origin --tags",
 		"release:patch": "npm version patch && npm publish",
 		"release:minor": "npm version minor && npm publish",
