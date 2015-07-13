@@ -2,8 +2,8 @@
 * @module {can.Construct} validatejs-shim ValidateJS Shim
 * @parent can-validate-shims
 * @description
-* HEYO!
-*
+* This shim requires ValidateJS in the consuming app's package.json. It processes
+* the passed in options so they can be properly used by the ValidateJS libarary.
 *
 */
 
@@ -11,7 +11,8 @@ import can from 'can';
 import validatejs from 'validate.js';
 
 //add shim
-function processOptions(opts){
+function processOptions(options){
+	var opts = can.extend({},options);
 	//check required
 	if (opts.required) {
 		opts.presence = true;
@@ -20,6 +21,11 @@ function processOptions(opts){
 		}
 		delete opts.required;
 	}
+
+	if (opts.mustValidate) {
+		delete opts.mustValidate;
+	}
+
 	return opts;
 };
 

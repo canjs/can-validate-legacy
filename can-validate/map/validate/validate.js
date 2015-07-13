@@ -68,8 +68,8 @@ proto.__set = function (prop, value, current, success, error) {
 			// Apply error response to observable
 			this.attr('errors').attr(prop,errors);
 
-			// Don't set value if `precheck` is true
-			if (validateOpts.precheck && validateOpts.precheck === true) {
+			// Don't set value if `mustValidate` is true
+			if (validateOpts.mustValidate && validateOpts.mustValidate === true) {
 				allowSet = false;
 			}
 		} else {

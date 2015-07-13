@@ -1,6 +1,6 @@
 {
 	"name": "can-validate",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
 	"scripts": {
         "build": "node ./stealBuild.js",
@@ -40,7 +40,7 @@
 	"browser": {
 		"./can-validate": "./dist/cjs/can-validate/can-validate",
 		"./map/validate": "./dist/cjs/can-validate/map/validate/validate",
-		"./validations": "./dist/cjs/can-validate/shims/validations.shim",
+		"./validations": "./dist/cjs/can-validate/validations",
 		"./shims/validatejs.shim": "./dist/cjs/can-validate/shims/validatejs.shim",
 		"./shims/validations.shim": "./dist/cjs/can-validate/shims/validations.shim"
 	},
