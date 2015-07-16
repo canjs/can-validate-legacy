@@ -28,6 +28,8 @@
 					<h3 class="panel-title">Validation Test</h3>
 				</div>
 				<div class="panel-body">
+					<p>Validation happens when a property&rsquo;s setter is called.
+					In the following examples, this happens when the field&rsquo;s value changes.</p>
 					<div class="form-group">
 						<label for="test1">MyVal</label>
 						<input class="form-control" id="test" type="text" can-value="myMap.myVal">
@@ -35,6 +37,10 @@
 					<div class="form-group">
 						<label for="test2">MyNum</label>
 						<input class="form-control" id="test2" type="text" can-value="myMap.myNum">
+					</div>
+					<div class="input-group">
+					<p>You can also validate all properties at once</p>
+					<button type="button" class="btn btn-primary" can-click="doValidate">Validate All</button>
 					</div>
 				</div>
 				<ul class="list-group">
@@ -57,7 +63,7 @@
 			var TestMap = can.Map.extend({
 				define: {
 					myVal: {
-						value: 'what the what',
+						value: 'hello',
 						validate: {
 							required: true,
 							length: {
@@ -78,7 +84,10 @@
 			});
 
 			can.$('#demo').viewModel({
-				myMap: new TestMap({})
+				myMap: new TestMap({}),
+				doValidate: function () {
+					this.attr('myMap').validate();
+				}
 			});
 		});
 	</script>

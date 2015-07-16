@@ -36,6 +36,18 @@
 
 import can from 'can';
 
+var processMapDefine = function (targetMap) {
+	var targetDefine = targetMap.define,
+		resp = {values: {}, opts: {}};
+
+	can.each(targetDefine, function (item, prop) {
+		resp.values[prop] = targetMap.attr(prop);
+		resp.opts[prop] = item.validate;
+	});
+
+	return resp;
+};
+
 //add methods to can
 var Validate = can.validate = can.Construct.extend({
 
@@ -136,15 +148,25 @@ var Validate = can.validate = can.Construct.extend({
 	 *  validation library used.
 	 */
 	validate: function () {
+		var validateArgs = arguments;
 		//!steal-remove-start
 		if (!this._validatorId ) {
 			can.dev.warn("A validator library is required for can.validate to work properly.");
 		}
-		if ( typeof values !== 'object' ) {
+		if ( typeof arguments[0] !== 'object' ) {
 			can.dev.warn("Attempting to pass single value to validate, use can.validator.once instead.");
 		}
 		//!steal-remove-end
-		return this.validator().validate.apply(this, arguments);
+
+		//check if can.map was passed, verify if there are validate options
+		// defined then validate all applicable props.
+		if (arguments[0] instanceof can.Map && arguments[0].define) {
+			var mapOptions = processMapDefine(arguments[0]);
+			validateArgs = [];
+			validateArgs.push(mapOptions.values);
+			validateArgs.push(mapOptions.opts);
+		}
+		return this.validator().validate.apply(this, validateArgs);
 
 	}
 },{});

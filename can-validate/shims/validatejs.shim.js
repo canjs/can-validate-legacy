@@ -11,8 +11,7 @@ import can from 'can';
 import validatejs from 'validate.js';
 
 //add shim
-function processOptions(options){
-	var opts = can.extend({},options);
+function processOptions(opts){
 	//check required
 	if (opts.required) {
 		opts.presence = true;
@@ -22,8 +21,12 @@ function processOptions(options){
 		delete opts.required;
 	}
 
-	if (opts.mustValidate) {
+	if (opts.hasOwnProperty('mustValidate') ) {
 		delete opts.mustValidate;
+	}
+
+	if (opts.hasOwnProperty('validateOnInit') ) {
+		delete opts.validateOnInit;
 	}
 
 	return opts;
@@ -54,10 +57,12 @@ var Shim = can.Construct.extend({
 
 		// process options for each value
 		for (var i = 0; i < valueKeys.length; i++) {
-			if ( options[i] ) {
-				processedOpts[i] = processOptions(options[i]);
+			var prop = valueKeys[i];
+			if ( options[prop] ) {
+				processedOpts[prop] = processOptions(options[prop]);
 			}
 		}
+
 		return validatejs(values, processedOpts);
 	}
 });

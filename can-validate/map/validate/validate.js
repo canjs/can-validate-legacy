@@ -24,25 +24,48 @@
 */
 
 import can from 'can';
+import 'can-validate/can-validate';
 
 var proto = can.Map.prototype,
-	oldSet = proto.__set;
+	oldSet = proto.__set,
+	getPropDefineBehavior = function(behavior, attr, define) {
+		var prop, defaultProp;
 
-var getPropDefineBehavior = function(behavior, attr, define) {
-	var prop, defaultProp;
+		if(define) {
+			prop = define[attr];
+			defaultProp = define['*'];
 
-	if(define) {
-		prop = define[attr];
-		defaultProp = define['*'];
-
-		if(prop && prop[behavior] !== undefined) {
-			return prop[behavior];
+			if(prop && prop[behavior] !== undefined) {
+				return prop[behavior];
+			}
+			else if(defaultProp && defaultProp[behavior] !== undefined) {
+				return defaultProp[behavior];
+			}
 		}
-		else if(defaultProp && defaultProp[behavior] !== undefined) {
-			return defaultProp[behavior];
-		}
+	};
+
+var ErrorsObj = can.Map.extend({},{
+	hasErrors: function () {
+		return !can.isEmptyObject(this.attr());
 	}
-};
+});
+
+var defaultValidationOpts = {
+	mustValidate: false,
+	validateOnInit: false
+}
+
+// add method to prototype that valdiates entire map
+can.extend(can.Map.prototype, {
+	validate: function () {
+		var errors = can.validate.validate(this);
+
+		// Process errors if we got them
+		this.attr('errors', new ErrorsObj(errors));
+
+		return can.isEmptyObject(errors);
+	}
+});
 
 // Override the prototype's __set with a more validate-y one.
 proto.__set = function (prop, value, current, success, error) {
@@ -50,26 +73,30 @@ proto.__set = function (prop, value, current, success, error) {
 	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true,
 		validateOpts = getPropDefineBehavior("validate", prop, this.define),
+		processedValidateOptions = can.extend({},defaultValidationOpts,validateOpts),
+		defaultValue = getPropDefineBehavior("value", prop, this.define),
+		propIniting = typeof current === 'undefined' && (defaultValue === value || typeof value === 'undefined'),
 		errors;
 
 	// If validation options set, run validation
-	if(validateOpts) {
+	if((validateOpts && !propIniting) || (validateOpts && propIniting && processedValidateOptions.validateOnInit )  ) {
+
 		// run validation
-		errors = can.validate.once(value, validateOpts, prop);
+		errors = can.validate.once(value, can.extend({},processedValidateOptions), prop);
 
 		// Process errors if we got them
 		if(errors && errors.length > 0) {
 
 			// Create errors property if doesn't exist
 			if(!this.attr('errors')) {
-				this.attr('errors', {});
+				this.attr('errors', new ErrorsObj({}));
 			}
 
 			// Apply error response to observable
 			this.attr('errors').attr(prop,errors);
 
 			// Don't set value if `mustValidate` is true
-			if (validateOpts.mustValidate && validateOpts.mustValidate === true) {
+			if (processedValidateOptions.mustValidate === true) {
 				allowSet = false;
 			}
 		} else {
