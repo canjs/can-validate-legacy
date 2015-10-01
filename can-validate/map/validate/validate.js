@@ -55,7 +55,22 @@ var defaultValidationOpts = {
 	validateOnInit: false
 }
 
-// add method to prototype that valdiates entire map
+function processValidateOpts(viewModel, val, opts){
+	console.log(opts);
+	var processedObj = {};
+	can.each(opts, function (item, key) {
+		var actualOpts = item;
+		if (typeof item === 'function') {
+			actualOpts = item.call(viewModel, val);
+		}
+		processedObj[key] = actualOpts;
+
+	});
+console.log(processedObj);
+	return processedObj;
+};
+
+// add method to prototype that validates entire map
 can.extend(can.Map.prototype, {
 	validate: function () {
 		var errors = can.validate.validate(this);
@@ -73,11 +88,11 @@ proto.__set = function (prop, value, current, success, error) {
 	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true,
 		validateOpts = getPropDefineBehavior("validate", prop, this.define),
-		processedValidateOptions = can.extend({},defaultValidationOpts,validateOpts),
+		processedValidateOptions = can.extend({},defaultValidationOpts, processValidateOpts(this, value, validateOpts ) ),
 		defaultValue = getPropDefineBehavior("value", prop, this.define),
-		propIniting = typeof current === 'undefined' && (defaultValue === value || typeof value === 'undefined'),
+		propIniting = this._initializing,
 		errors;
-
+console.log(this.attr());
 	// If validation options set, run validation
 	if((validateOpts && !propIniting) || (validateOpts && propIniting && processedValidateOptions.validateOnInit )  ) {
 

@@ -13,9 +13,9 @@ import validatejs from 'validate.js';
 //add shim
 function processOptions(opts){
 	//check required
-	if (opts.required) {
-		opts.presence = true;
-		if (typeof opts.required === 'object') {
+	if (typeof opts.required !== 'undefined') {
+
+		if (typeof opts.required === 'object' || typeof opts.required === 'boolean') {
 			opts.presence = opts.required;
 		}
 		delete opts.required;
