@@ -1,9 +1,9 @@
 {
 	"name": "can-validate",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
 	"scripts": {
-        "build": "node ./stealBuild.js",
+		"build": "node ./stealBuild.js",
 		"test": "testee --browsers firefox can-validate.test.html",
 		"prepublish": "npm run build",
 		"publish": "git push origin --tags",
@@ -21,7 +21,9 @@
 		"plugin",
 		"canjs"
 	],
-	"author": "Bitovi",
+	"author": {
+		"name": "Bitovi"
+	},
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/canjs/can-validate/issues"
@@ -47,7 +49,7 @@
 	"system": {
 		"ignoreBrowser": true,
 		"npmIgnore": [
-		  "documentjs"
+			"documentjs"
 		],
 		"npmDependencies": [
 			"steal-qunit"
@@ -59,5 +61,11 @@
 			"validate.js": "./node_modules/validate.js/validate.js"
 		},
 		"transpiler": "babel"
-	}
+	},
+	"readme": "@page can-validate-library Can-Validate\n\n# Can Validate\n\nA plugin for CanJS that wraps any validation library to `can.validate`. Can.Validate doesn't do any validation of it's own but instead provides some abstraction to your library of choice which is added using a shim.\n\nThe plugin also includes a plugin for `can.Map.define` that can be used to automatically check values as they are set to the property.\n\nDon't have a library of choice? Can.Validate ships with a shim for CanJS Validations and [ValidateJS](http://validatejs.org/).\n\nThe docs cover the following topics:\n\n- can.validate core\n- can.Map.validate plugin\n- The CanJS Validations library\n- Available Shims\n- Creating your own shim\n\n\nCheck out the demos as well:\n\n- Can.Validate\n- Can.Map.Validate\n",
+	"readmeFilename": "readme.md",
+	"_id": "can-validate@0.0.5",
+	"_shasum": "6e816eb6a09bba0f8b3004fdc1e72736b89742f5",
+	"_resolved": "https://registry.npmjs.org/can-validate/-/can-validate-0.0.5.tgz",
+	"_from": "can-validate@>=0.0.5 <0.1.0"
 }
