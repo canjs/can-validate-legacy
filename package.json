@@ -72,7 +72,8 @@
     ],
     "rules": {
       "no-lonely-if": 0,
-      "no-else-return": 0
+      "no-else-return": 0,
+      "spaced-comment": 0
     },
     "ignore": [
       "node_modules/**",
