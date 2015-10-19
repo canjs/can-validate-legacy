@@ -78,7 +78,7 @@ processValidateOpts = function (itemObj, opts) {
 	});
 
 	can.each(computes, function (item) {
-		item.compute.bind('change', function (ev, newVal) {\
+		item.compute.bind('change', function (ev, newVal) {
 			processedObj[item.key] = newVal;
 			vm._validateOne(itemObj, processedObj);
 		});
