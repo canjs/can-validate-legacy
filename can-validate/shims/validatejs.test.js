@@ -26,11 +26,11 @@ var ValidatedMap = can.Map.extend({
 var test = new ValidatedMap({});
 
 test('validate on init', function () {
-	equal(test.errors['myNumber'].length, 1, 'Validate ran successfully on init.');
+	equal(test.errors.myNumber.length, 1, 'Validate ran successfully on init.');
 });
 
 test('validate', function () {
-	equal(test.errors['myString'], undefined, 'Does not validate on init by default.');
+	equal(test.errors.myString, undefined, 'Does not validate on init by default.');
 	test.attr('myString', 'a');
-	equal(test.errors['myString'].length, 1, 'Validate ran successfully on change of value.');
+	equal(test.errors.myString.length, 1, 'Validate ran successfully on change of value.');
 });
