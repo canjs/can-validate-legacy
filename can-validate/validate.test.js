@@ -1,39 +1,39 @@
 /* jshint asi: false */
 import can from 'can';
-import 'can-validate';
+import 'can-validate/can-validate';
 import 'steal-qunit';
 
-var testValues = {
-	stringTest: 'heyo',
-	numberTest: 10,
-	nullTest: null
-};
 
-var testOptions = {
-	stringTest: {
-		length: {
-			is: 4
-		}
+var Shim = can.Construct.extend({
+	once: function (value, options, name) {
+		return {v:value, o:options, n:name};
 	},
-	numberTest: {
-		numercality: true
+	isValid: function (value, options) {
+		return {v:value, o:options};
+	},
+	validate: function (values, options) {
+		return {v:values, o:options};
 	}
-}
-
-test('default property values', function () {
-	equal(true, true, 'Yep');
 });
 
-test('once', function () {
-	var errors = can.validate.once(testValues.stringTest, testOptions.stringTest);
-	equal(errors,undefined, 'Validate ran successfully.');
+can.validate.register('testValidator', new Shim());
 
-	var errors = can.validate.once('test', 'a', testOptions.stringTest);
-	equal(errors[0], 'Test is the wrong length (should be 4 characters)', 'Validate ran successfully.');
+test('once', function () {
+	var errors = can.validate.once('foo', 'bar', 'heyo');
+	equal(errors.v, 'foo', 'Value argument passed to shim.');
+	equal(errors.o, 'bar', 'Options argument passed to shim.');
+	equal(errors.n, 'heyo', 'Name argument passed to shim');
+});
+
+test('isValid', function () {
+	var errors = can.validate.isValid('foo', 'bar');
+	equal(errors.v, 'foo', 'Value argument passed to shim.');
+	equal(errors.o, 'bar', 'Options argument passed to shim.');
 });
 
 test('validate', function () {
-	var errors = can.validate.validate(testValues, testOptions);
-	equal(errors, undefined, 'Validate ran successfully.');
+	var errors = can.validate.validate('foo', 'bar');
+	equal(errors.v, 'foo', 'Value argument passed to shim.');
+	equal(errors.o, 'bar', 'Options argument passed to shim.');
 
 });
