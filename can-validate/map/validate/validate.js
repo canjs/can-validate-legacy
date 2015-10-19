@@ -28,6 +28,11 @@ import 'can-validate/can-validate';
 
 var proto = can.Map.prototype;
 var oldSet = proto.__set;
+var ErrorsObj;
+var defaultValidationOpts;
+var processValidateOpts;
+
+// Gets properties from the map's define property.
 var getPropDefineBehavior = function (behavior, attr, define) {
 	var prop;
 	var defaultProp;
@@ -46,37 +51,39 @@ var getPropDefineBehavior = function (behavior, attr, define) {
 	}
 };
 
-var ErrorsObj;
-var defaultValidationOpts;
-var processValidateOpts;
-
+// Default Map for errors object. Useful to add instance helpers
 ErrorsObj = can.Map.extend({}, {
 	hasErrors: function () {
 		return !can.isEmptyObject(this.attr());
 	}
 });
 
+// Default validation options to extend passed options from
 defaultValidationOpts = {
 	mustValidate: false,
 	validateOnInit: false
 };
 
+// Processes validation options, creates computes from functions and adds listeners
 processValidateOpts = function (itemObj, opts) {
 	var processedObj = {};
 	var computes = [];
 	var vm = this;
 
+	// Loop through each validation option
 	can.each(opts, function (item, key) {
 		var actualOpts = item;
 		if (typeof item === 'function') {
-			// create compute
+			// create compute and add it to computes array
 			var compute = can.compute(can.proxy(item, vm));
 			actualOpts = compute(itemObj.value);
 			computes.push({key: key, compute: compute});
 		}
+		// build the map for the final validations object
 		processedObj[key] = actualOpts;
 	});
 
+	// Using the computes array, create necessary listeners
 	can.each(computes, function (item) {
 		item.compute.bind('change', function (ev, newVal) {
 			processedObj[item.key] = newVal;
@@ -136,11 +143,13 @@ proto.__set = function (prop, value, current, success, error) {
 	var propIniting = (this._init && this._init === 1) || false;
 	var processedValidateOptions;
 
+	// Build validation options from defaults and processed options
 	processedValidateOptions = can.extend({}, defaultValidationOpts, processValidateOpts.call(this, {key: prop, value: value}, validateOpts));
 
 	// If validate opts are set and not initing, validate properties
 	// If validate opts are set and initing, validate properties only if validateOnInit is true
 	if ((validateOpts && !propIniting) || (validateOpts && propIniting && processedValidateOptions.validateOnInit)) {
+		// Validate item
 		allowSet = this._validateOne({key: prop, value: value}, processedValidateOptions);
 	}
 
