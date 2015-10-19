@@ -90,10 +90,18 @@ proto.__set = function (prop, value, current, success, error) {
 		validateOpts = getPropDefineBehavior("validate", prop, this.define),
 		processedValidateOptions = can.extend({},defaultValidationOpts, processValidateOpts(this, value, validateOpts ) ),
 		defaultValue = getPropDefineBehavior("value", prop, this.define),
+<<<<<<< HEAD
 		propIniting = this._initializing,
 		errors;
 console.log(this.attr());
 	// If validation options set, run validation
+=======
+		propIniting = (this._init && this._init === 1) || false,
+		errors;
+
+	// If validate opts are set and not initing, validate properties
+	// If validate opts are set and initing, validate properties only if validateOnInit is true
+>>>>>>> master
 	if((validateOpts && !propIniting) || (validateOpts && propIniting && processedValidateOptions.validateOnInit )  ) {
 
 		// run validation

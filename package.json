@@ -1,9 +1,9 @@
 {
 	"name": "can-validate",
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
 	"scripts": {
-        "build": "node ./stealBuild.js",
+		"build": "node ./stealBuild.js",
 		"test": "testee --browsers firefox can-validate.test.html",
 		"prepublish": "npm run build",
 		"publish": "git push origin --tags",
@@ -21,7 +21,9 @@
 		"plugin",
 		"canjs"
 	],
-	"author": "Bitovi",
+	"author": {
+		"name": "Bitovi"
+	},
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/canjs/can-validate/issues"
@@ -47,7 +49,7 @@
 	"system": {
 		"ignoreBrowser": true,
 		"npmIgnore": [
-		  "documentjs"
+			"documentjs"
 		],
 		"npmDependencies": [
 			"steal-qunit"
