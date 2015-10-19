@@ -70,10 +70,8 @@
 						value: 'hello',
 						validate: {
 							required: function () {
-								return this.attr('isRequired')
-							},
-							length: {
-								minimum: 6
+								console.log('required function!');
+								return this.attr('isRequired') || false;
 							}
 						}
 					},
