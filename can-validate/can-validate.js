@@ -37,8 +37,8 @@
 import can from 'can';
 
 var processMapDefine = function (targetMap) {
-	var targetDefine = targetMap.define,
-		resp = {values: {}, opts: {}};
+	var targetDefine = targetMap.define;
+	var resp = {values: {}, opts: {}};
 
 	can.each(targetDefine, function (item, prop) {
 		resp.values[prop] = targetMap.attr(prop);
@@ -48,8 +48,8 @@ var processMapDefine = function (targetMap) {
 	return resp;
 };
 
-//add methods to can
-var Validate = can.validate = can.Construct.extend({
+// add methods to can
+var Validate = can.Construct.extend({
 
 	/*
 	* @description The current validator ID to use when can.validate methods are called.
@@ -62,103 +62,103 @@ var Validate = can.validate = can.Construct.extend({
 	_validators: {},
 
 	/**
-	 * @function can-validate.validator Validator
-	 * @parent can-validate.utils
-	 * @description Registers a library with can.validate. The last one registered is the default library.
-	 * Override the default by changing `_validatorId` to the key of the desired registered library.
-	 * ```js
-	 * Validate.register('validatejs',validatejs);
-	 * ```
-	 * @param {string} id The key name of the validator library.
-	 * @param {object|function} validator The validator libarary. Only pass instances.
-	 */
+	* @function can-validate.validator Validator
+	* @parent can-validate.utils
+	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Override the default by changing `_validatorId` to the key of the desired registered library.
+	* ```js
+	* Validate.register('validatejs',validatejs);
+	* ```
+	* @param {string} id The key name of the validator library.
+	* @param {object|function} validator The validator libarary. Only pass instances.
+	*/
 	validator: function () {
-			return this._validators[this._validatorId];
+		return this._validators[this._validatorId];
 	},
 
 	/**
-	 * @function can-validate.register Register
-	 * @parent can-validate.utils
-	 * @description Registers a library with can.validate. The last one registered is the default library.
-	 * Override the default by changing `_validatorId` to the key of the desired registered library.
-	 * ```js
-	 * Validate.register('validatejs',validatejs);
-	 * ```
-	 * @param {string} id The key name of the validator library.
-	 * @param {object|function} validator The validator libarary. Only pass instances.
-	 */
+	* @function can-validate.register Register
+	* @parent can-validate.utils
+	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Override the default by changing `_validatorId` to the key of the desired registered library.
+	* ```js
+	* Validate.register('validatejs',validatejs);
+	* ```
+	* @param {string} id The key name of the validator library.
+	* @param {object|function} validator The validator libarary. Only pass instances.
+	*/
 	register: function (id, validator) {
 		this._validatorId = id;
 		this._validators[id] = validator;
 	},
 
 	/**
-	 * @function can-validate.isValid Is Valid
-	 * @parent can-validate.validators
-	 * @description Registers a library with can.validate. The last one registered is the default library.
-	 * Override the default by changing `_validatorId` to the key of the desired registered library.
-	 * ```js
-	 * Validate.isValid('', {}, 'myVal');
-	 * ```
-	 * @param {*} value A value of any type to validate.
-	 * @param {object} options Validation config object, structure depends on the
-	 *  validation library used.
-	 * @param {string} name Optional. The key name of the value.
-	 */
+	* @function can-validate.isValid Is Valid
+	* @parent can-validate.validators
+	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Override the default by changing `_validatorId` to the key of the desired registered library.
+	* ```js
+	* Validate.isValid('', {}, 'myVal');
+	* ```
+	* @param {*} value A value of any type to validate.
+	* @param {object} options Validation config object, structure depends on the
+	*  validation library used.
+	* @param {string} name Optional. The key name of the value.
+	*/
 	isValid: function () {
 		//!steal-remove-start
-		if (!this._validatorId ) {
-			can.dev.warn("A validator library is required for can.validate to work properly.");
+		if (!this._validatorId) {
+			can.dev.warn('A validator library is required for can.validate to work properly.');
 		}
 		//!steal-remove-end
 		return this.validator().isValid.apply(this, arguments);
 	},
 
 	/**
-	 * @function can-validate.once Once
-	 * @parent can-validate.validators
-	 * @description Registers a library with can.validate. The last one registered is the default library.
-	 * Override the default by changing `_validatorId` to the key of the desired registered library.
-	 * ```js
-	 * Validate.once('', {}, 'myVal');
-	 * ```
-	 * @param {*} value A value of any type to validate.
-	 * @param {object} options Validation config object, structure depends on the
-	 *  validation library used.
-	 * @param {string} name Optional. The key name of the value.
-	 */
+	* @function can-validate.once Once
+	* @parent can-validate.validators
+	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Override the default by changing `_validatorId` to the key of the desired registered library.
+	* ```js
+	* Validate.once('', {}, 'myVal');
+	* ```
+	* @param {*} value A value of any type to validate.
+	* @param {object} options Validation config object, structure depends on the
+	*  validation library used.
+	* @param {string} name Optional. The key name of the value.
+	*/
 	once: function () {
 		//!steal-remove-start
-		if (!this._validatorId ) {
-			can.dev.warn("A validator library is required for can.validate to work properly.");
+		if (!this._validatorId) {
+			can.dev.warn('A validator library is required for can.validate to work properly.');
 		}
 		//!steal-remove-end
 		return this.validator().once.apply(this, arguments);
 	},
 
 	/**
-	 * @function can-validate.validate Validate
-	 * @parent can-validate.validators
-	 * @description
-	 * ```js
-	 * Validate.validate({},{});
-	 * ```
-	 * @param {object} values A map of the different objects to validate.
-	 * @param {object} options Validation config object, structure depends on the
-	 *  validation library used.
-	 */
+	* @function can-validate.validate Validate
+	* @parent can-validate.validators
+	* @description
+	* ```js
+	* Validate.validate({},{});
+	* ```
+	* @param {object} values A map of the different objects to validate.
+	* @param {object} options Validation config object, structure depends on the
+	*  validation library used.
+	*/
 	validate: function () {
 		var validateArgs = arguments;
 		//!steal-remove-start
-		if (!this._validatorId ) {
-			can.dev.warn("A validator library is required for can.validate to work properly.");
+		if (!this._validatorId) {
+			can.dev.warn('A validator library is required for can.validate to work properly.');
 		}
-		if ( typeof arguments[0] !== 'object' ) {
-			can.dev.warn("Attempting to pass single value to validate, use can.validator.once instead.");
+		if (typeof arguments[0] !== 'object') {
+			can.dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
 		}
 		//!steal-remove-end
 
-		//check if can.map was passed, verify if there are validate options
+		// check if can.map was passed, verify if there are validate options
 		// defined then validate all applicable props.
 		if (arguments[0] instanceof can.Map && arguments[0].define) {
 			var mapOptions = processMapDefine(arguments[0]);
@@ -167,8 +167,9 @@ var Validate = can.validate = can.Construct.extend({
 			validateArgs.push(mapOptions.opts);
 		}
 		return this.validator().validate.apply(this, validateArgs);
-
 	}
-},{});
+}, {});
+
+can.validate = Validate;
 
 export default can;

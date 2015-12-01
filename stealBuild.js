@@ -1,16 +1,16 @@
-var stealTools = require("steal-tools");
+var stealTools = require('steal-tools');
 
 stealTools.export({
 	system: {
-		config: "package.json!npm",
-		main: "can-validate.build"
+		config: 'package.json!npm',
+		main: 'can-validate.build'
 	},
 	options: {
 		sourceMaps: true
 	},
 	outputs: {
-		"+cjs": {},
-		"+amd": {},
-		"+global-js": {}
+		'+cjs': {},
+		'+amd': {},
+		'+global-js': {}
 	}
 });
