@@ -10,22 +10,21 @@
 import can from 'can';
 import validatejs from 'validate.js';
 
-//add shim
-function processOptions(opts){
-	//check required
+// add shim
+var processOptions = function (opts) {
+	// check required
 	if (typeof opts.required !== 'undefined') {
-
 		if (typeof opts.required === 'object' || typeof opts.required === 'boolean') {
 			opts.presence = opts.required;
 		}
 		delete opts.required;
 	}
 
-	if (opts.hasOwnProperty('mustValidate') ) {
+	if (opts.hasOwnProperty('mustValidate')) {
 		delete opts.mustValidate;
 	}
 
-	if (opts.hasOwnProperty('validateOnInit') ) {
+	if (opts.hasOwnProperty('validateOnInit')) {
 		delete opts.validateOnInit;
 	}
 
@@ -52,13 +51,14 @@ var Shim = can.Construct.extend({
 		return errors.length === 0;
 	},
 	validate: function (values, options) {
-		var valueKeys = Object.keys(values), // <ie9 solution?
-			processedOpts = {};
+		// <ie9 solution?
+		var valueKeys = Object.keys(values);
+		var processedOpts = {};
 
 		// process options for each value
 		for (var i = 0; i < valueKeys.length; i++) {
 			var prop = valueKeys[i];
-			if ( options[prop] ) {
+			if (options[prop]) {
 				processedOpts[prop] = processOptions(options[prop]);
 			}
 		}
