@@ -7,16 +7,15 @@
 *
 */
 
-import can from 'can';
+//import can from 'can';
+import can from 'can-validate/can-validate';
 import validatejs from 'validate.js';
 
 // add shim
 var processOptions = function (opts) {
 	// check required
 	if (typeof opts.required !== 'undefined') {
-		if (typeof opts.required === 'object' || typeof opts.required === 'boolean') {
-			opts.presence = opts.required;
-		}
+		opts.presence = opts.required;
 		delete opts.required;
 	}
 

@@ -39,7 +39,6 @@ import can from 'can';
 var processMapDefine = function (targetMap) {
 	var targetDefine = targetMap.define;
 	var resp = {values: {}, opts: {}};
-
 	can.each(targetDefine, function (item, prop) {
 		resp.values[prop] = targetMap.attr(prop);
 		resp.opts[prop] = item.validate;
