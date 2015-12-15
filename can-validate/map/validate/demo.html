@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Memory Leak Test</title>
+	<title>can-validate Map Plugin Demo</title>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 	<style>
 		#app {
@@ -31,8 +31,12 @@
 					<p>Validation happens when a property&rsquo;s setter is called.
 					In the following examples, this happens when the field&rsquo;s value changes.</p>
 					<div class="form-group">
+						<label for="test1">MyVal required?</label>
+						<input class="form-control" id="test" type="checkbox" can-value="myMap.isRequired">
+					</div>
+					<div class="form-group">
 						<label for="test1">MyVal</label>
-						<input class="form-control" id="test" type="text" can-value="myMap.myVal">
+						<input class="form-control" id="test1" type="text" can-value="myMap.myVal">
 					</div>
 					<div class="form-group">
 						<label for="test2">MyNum</label>
@@ -65,9 +69,8 @@
 					myVal: {
 						value: 'hello',
 						validate: {
-							required: true,
-							length: {
-								minimum: 6
+							required: function () {
+								return this.attr('isRequired') || false;
 							}
 						}
 					},
@@ -77,8 +80,13 @@
 							required: true,
 							numericality: {
 								greaterThan: 5
-							}
+							},
+							validateOnInit: true
 						}
+					},
+					isRequired: {
+						value: false,
+						type: 'boolean'
 					}
 				}
 			});

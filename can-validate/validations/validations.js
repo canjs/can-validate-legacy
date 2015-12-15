@@ -7,45 +7,41 @@
 *
 */
 
+var validate;
+var proc;
+var attrName;
 
-//Copies old map validation plugin stuff
+// Copies old map validation plugin stuff
 steal('can', function (can) {
-
-	//validations object is by property.  You can have validations that
-	//span properties, but this way we know which ones to run.
+	// validations object is by property.  You can have validations that
+	// span properties, but this way we know which ones to run.
 	//  proc should return true if there's an error or the error message
 
 	return can.Construct.extend({
 		once: function (value, options, key) {
 			var errors = [];
-			// normalize argumetns
-			if (!proc) {
-				proc = options;
-				options = {};
-			}
 
 			errors.push(function (newVal) {
 				// if options has a message return that, otherwise, return the error
 				var res = proc.call(this, newVal, attrName);
-				return res === undefined ? undefined : options.message || res;
+				return res === undefined ? undefined : key + options.message || res;
 			});
 		},
 
 		validate: function (values, options) {
-			var errors=[];
+			var errors = [];
 			options = options || {};
 
 			can.each(values, function (attrName) {
 				var opts = options[attrName];
+				var validator;
 				// Add a test function for each attribute
 				if (!errors[attrName]) {
 					errors[attrName] = [];
 				}
 
 				opts.each(function (opt, key) {
-					var validator = 'validate' + can.capitalize(key) + 'Of';
-
-
+					validator = validator + 'validate' + can.capitalize(key) + 'Of';
 				});
 
 				errors[attrName].push(function (newVal) {
@@ -74,13 +70,14 @@ steal('can', function (can) {
 			});
 		},
 		validateInclusionOf: function (attrNames, inArray, options) {
-			validate.call(this, attrNames, options, function (value) {
+			return validate.call(this, attrNames, options, function (value) {
+				var resp;
 				if (typeof value === 'undefined') {
-					return;
+					return resp;
 				}
 				for (var i = 0; i < inArray.length; i++) {
 					if (inArray[i] === value) {
-						return;
+						return resp;
 					}
 				}
 				return this.constructor.validationMessages.inclusion;
@@ -117,5 +114,5 @@ steal('can', function (can) {
 				}
 			});
 		}
-	},{});
+	}, {});
 });
