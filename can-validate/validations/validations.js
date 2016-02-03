@@ -1,12 +1,3 @@
-/**
-* @module {can.Construct} validations Validations
-* @parent can-validate-library
-* @description
-* HEYO!
-*
-*
-*/
-
 var validate;
 var proc;
 var attrName;

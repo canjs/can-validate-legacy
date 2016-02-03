@@ -4,14 +4,22 @@
 * @description
 * This shim requires ValidateJS in the consuming app's package.json. It processes
 * the passed in options so they can be properly used by the ValidateJS libarary.
+* @body
+*
+* ## Initialization
+* Import ValidateJS, validate plugin and this shim to immediately use the
+* ValidateJS in a CanJS project plugin.
+* ```js
+* import 'validatejs';
+* import 'can-validate/can-validate';
+* import 'can-validate/shims/validatejs.shim';
+*```
 *
 */
 
-//import can from 'can';
 import can from 'can-validate/can-validate';
 import validatejs from 'validate.js';
 
-// add shim
 var processOptions = function (opts) {
 	// check required
 	if (typeof opts.required !== 'undefined') {
@@ -31,6 +39,18 @@ var processOptions = function (opts) {
 };
 
 var Shim = can.Construct.extend({
+
+	/**
+	* @function once Once
+	* @description Validates a single property using provided validation options
+	* @param {*} value Some value to validate against.
+	* @param {Object} options Raw validation options. They will be processed since
+	* not all options are valid for ValidateJS.
+	* @param {string} name The key name of the value to validate. Used to prepend to
+	* error messages, if any.
+	* @return {undefined|array} Returns undefined if no errors, otherwise returns
+	* a list of errors.
+	*/
 	once: function (value, options, name) {
 		var errors = validatejs.single(value, processOptions(options));
 
@@ -44,11 +64,33 @@ var Shim = can.Construct.extend({
 
 		return errors;
 	},
+
+	/**
+	* @function isValid Is Valid
+	* @description Simply checks if the property value will validate or not, this
+	* method will not set errors, it is meant to check validity *before* a property
+	* is set.
+	* @param {*} value Some value to validate against.
+	* @param {Object} options Raw validation options. They will be processed since
+	* not all options are valid for ValidateJS.
+	* @return {boolean} True if valid, otherwise returns false
+	*/
 	isValid: function (value, options) {
 		var errors = validatejs.single(value, processOptions(options)) || [];
 
 		return errors.length === 0;
 	},
+
+	/**
+	* @function validate Validate
+	* @description
+	* @param {Object} values A map of properties to validate
+	* @param {Object} options Raw validation options. They will be processed since
+	* not all options are valid for ValidateJS. It should be a map of property keys
+	* which contain the respective validation properties.
+	* @return {undefined|array} Returns undefined if no errors, otherwise returns
+	* a list of errors.
+	*/
 	validate: function (values, options) {
 		// <ie9 solution?
 		var valueKeys = Object.keys(values);
@@ -66,4 +108,5 @@ var Shim = can.Construct.extend({
 	}
 });
 
+// Register the shim
 can.validate.register('validatejs', new Shim());

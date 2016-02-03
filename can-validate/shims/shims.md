@@ -1,5 +1,5 @@
 @page can-validate-shims Shims
-@parent can-validate-library
+@parent can-validate-plugin
 
 # Can-Validate Shims
 

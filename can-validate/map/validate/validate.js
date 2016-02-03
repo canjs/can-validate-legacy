@@ -18,6 +18,37 @@
 * import 'can-validate/shims/validatejs.shim';
 *```
 *
+* ## Usage
+*
+* Using can-validate Map plugin only requires two extra actions,
+*
+* - add a validate object to the desired property
+* - add a check in the view for the errors object
+*
+* The validate object depends on the desired valdiation library. The examples
+* below use ValidateJS.
+*
+*```js
+* var ViewModel = can.Map.extend({
+*   define: {
+*     name: {
+*       value: '',
+*       validate: {
+*         required: true
+*       }
+*     }
+*   }
+* });
+* var viewModel = new ViewModel({});
+* viewModel.validate();
+* // `errors` will have an error because the `name` value is empty
+* //  and required is true.
+* viewModel.attr('errors');
+* viewModel.attr('name', 'Juan');
+* viewModel.attr('errors'); // => Errors is now empty!
+*```
+*
+* ## Demo
 * @demo ./can-validate/map/validate/demo.html
 *
 *
@@ -31,6 +62,8 @@ var oldSet = proto.__set;
 var ErrorsObj;
 var defaultValidationOpts;
 
+//TODO: Don't do this, instead create a property during `setup` that is removed
+// during `init`.
 var isMapInitializing = function () {
 	var initing = false;
 	// Pre 2.3
@@ -85,9 +118,24 @@ defaultValidationOpts = {
 
 // add method to prototype that validates entire map
 can.extend(can.Map.prototype, {
+
+	/**
+	* @function validate Validate
+	* @deprecated {1.0} `validate` is deprecated and will be removed in version 1.0.
+	* Use `_validate` instead.
+	*
+	* @description Runs validation on the entire map instance. Actual behavior of
+	* "validate all" is defined by the registered shim.
+	*/
 	validate: function () {
 		return this._validate();
 	},
+
+	/**
+	* @function _validate _Validate
+	* @description Runs validation on the entire map instance. Actual behavior of
+	* "validate all" is defined by the registered shim (`validate`).
+	*/
 	_validate: function () {
 		var errors = can.validate.validate(this);
 
@@ -96,6 +144,21 @@ can.extend(can.Map.prototype, {
 
 		return can.isEmptyObject(errors);
 	},
+	/**
+	* @function _validateOne Validate One
+	* @description Main method used by `can.Map.define` setter when a property changes.
+	*  Runs validation on a property. Actual behavior of "validate one" is defined
+	*  by the registered shim (`once`).
+	*
+	*  It also handles setting the errors property on the map instance and then
+	* manages the errors for the current property within the errors object.
+	*
+	* @param {object} item A key/value object
+	* @param {object} opts Object that contains validation config.
+	* @return {boolean} True if method found that the property can be saved; if
+	*  validation fails and the property must validate (`mustValidate` property),
+	*  this will be `false`.
+	*/
 	_validateOne: function (item, opts) {
 		var errors;
 		var allowSet = true;
@@ -126,10 +189,18 @@ can.extend(can.Map.prototype, {
 
 		return allowSet;
 	},
-	// _computeChange: function (key) {
-	// 	var
-	// },
-	// Processes validation options, creates computes from functions and adds listeners
+
+	/**
+	* @function _processValidateOpts Process Validate Opts
+	* @description Allows the ability to pass computes in validation properties,
+	* this allows for things like making a property required based on the value on
+	* another property.
+	*
+	* Processes validation options, creates computes from functions and adds
+	* listeners to computes.
+	* @param {object} itemObj Property to validate
+	* @param {object} opts Map of validation options
+	*/
 	_processValidateOpts: function (itemObj, opts) {
 		var processedObj = {};
 		var computes = [];

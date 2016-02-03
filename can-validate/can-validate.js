@@ -1,6 +1,6 @@
 /**
 * @module {can.Construct} can-validate Can-Validate
-* @parent can-validate-library
+* @parent can-validate-plugin
 * @group can-validate.validators 0 Validate Methods
 * @group can-validate.utils 1 Utilities
 * @description
