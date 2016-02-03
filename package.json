@@ -1,11 +1,11 @@
 {
   "name": "can-validate",
-  "version": "0.4.1",
+  "version": "0.8.1",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
     "build": "node ./stealBuild.js",
-    "serve": "http-server -p 3000 -c-1 -o",
-	"lint": "xo",
+    "develop": "http-server -p 3000 -c-1 -o",
+	  "lint": "xo",
     "test": "xo && testee --browsers firefox can-validate.test.html",
     "prepublish": "npm run build",
     "publish": "git push origin --tags",
@@ -77,7 +77,8 @@
     "rules": {
       "no-lonely-if": 0,
       "no-else-return": 0,
-      "spaced-comment": 0
+      "spaced-comment": 0,
+      "no-warning-comments": 0
     },
     "globals": [
         "steal"

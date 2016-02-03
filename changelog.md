@@ -1,4 +1,23 @@
+@page changelog Changelog
+@parent can-validate-plugin
 # Change log
+
+## [0.8.1] - 2015-02-03
+
+### Added
+
+- This change log
+- Contributing guide
+
+### Changed
+
+- Changed documentation root to `can-validate-plugin`, changed from `can-validate-library`.
+- Improved readme.
+- Improved overall documentation.
+
+### Removed
+
+- Removed CanJS Validations library documentation since it is still a WIP.
 
 ## [0.8.0] - 2015-12-03
 
@@ -42,7 +61,7 @@
 ## [0.5.0] - 2015-07-16
 
 ### Added
-- Added validate all method to can.Map plugin
+- Added "validate all" method to can.Map plugin
 
 ## [0.4.2] - 2015-07-13
 

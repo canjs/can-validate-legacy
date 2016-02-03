@@ -3,7 +3,7 @@
 		"docs": {
 			"glob": "**/*.{js,md}",
 			"dest": "./docs",
-			"parent": "can-validate-library"
+			"parent": "can-validate-plugin"
 		}
 	}
 }
