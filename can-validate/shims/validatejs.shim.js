@@ -52,14 +52,26 @@ var Shim = can.Construct.extend({
 	* a list of errors.
 	*/
 	once: function (value, options, name) {
-		var errors = validatejs.single(value, processOptions(options));
+		var errors = [];
+		var opts = [];
+		var validationOpts = []
 
-		// Add the name to the front of the error string
-		if (errors && name) {
-			for (var i = 0; i < errors.length; i++) {
-				// Attempt to prettyify the name in each error
-				errors[i] = can.capitalize(can.camelize(name)) + ' ' + errors[i];
-			}
+		// Check if name was passed, determines which validate method to use
+		if (name) {
+			// Since name exists, use the main validate method but just pass one
+			// property to it. Need to structure the objects it expects first.
+			opts[name] = value;
+			validationOpts[name] = processOptions(options);
+
+			// Use main validate method, gives us better handling of custom messages
+			// and key path name prepending.
+			errors = validatejs(opts, validationOpts);
+
+			// can.Map.define expects an array of strings, but main validate method
+			// returns an object.
+			errors = errors[name];
+		} else {
+			errors = validatejs.single(value, processOptions(options));
 		}
 
 		return errors;

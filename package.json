@@ -53,11 +53,11 @@
     "ignoreBrowser": true,
     "npmIgnore": [
       "documentjs",
-      "steal-qunit",
       "testee",
       "steal-tools",
       "xo"
     ],
+    "npmAlgorithm": "flat",
     "npmDependencies": [
       "steal-qunit"
     ],
