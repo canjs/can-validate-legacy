@@ -69,7 +69,9 @@ var Shim = can.Construct.extend({
 
 			// can.Map.define expects an array of strings, but main validate method
 			// returns an object.
-			errors = errors[name];
+			if (errors) {
+				errors = errors[name];
+			}
 		} else {
 			errors = validatejs.single(value, processOptions(options));
 		}
