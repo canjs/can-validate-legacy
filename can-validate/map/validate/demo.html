@@ -79,7 +79,8 @@
 						validate: {
 							required: true,
 							numericality: {
-								greaterThan: 5
+								greaterThan: 5,
+								message: '^This is a custom message! Hi!'
 							},
 							validateOnInit: true
 						}
