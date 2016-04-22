@@ -14,6 +14,6 @@ var ValidatedMap = can.Map.extend({
 	}
 });
 
-var test = new ValidatedMap();
+var validatedMap = new ValidatedMap();
 
-test.attr('myNumber', null);
+validatedMap.attr('myNumber', null);

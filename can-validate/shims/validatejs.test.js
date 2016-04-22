@@ -1,6 +1,9 @@
 /* jshint asi: false */
 import can from 'can';
-import 'can-validate/map/validate/validate';
+import 'can/map/define/';
+import 'can-validate/can-validate';
+import 'can-validate/map/validate/';
+import 'can-validate/shims/validatejs.shim';
 import 'steal-qunit';
 
 var ValidatedMap = can.Map.extend({
@@ -23,14 +26,14 @@ var ValidatedMap = can.Map.extend({
 	}
 });
 
-var test = new ValidatedMap({});
+var validatedMap = new ValidatedMap({});
 
 test('validate on init', function () {
-	equal(test.errors.myNumber.length, 1, 'Validate ran successfully on init.');
+	equal(validatedMap.errors.myNumber.length, 1, 'Validate ran successfully on init.');
 });
 
 test('validate', function () {
-	equal(test.errors.myString, undefined, 'Does not validate on init by default.');
-	test.attr('myString', 'a');
-	equal(test.errors.myString.length, 1, 'Validate ran successfully on change of value.');
+	equal(validatedMap.errors.myString, undefined, 'Does not validate on init by default.');
+	validatedMap.attr('myString', '');
+	equal(validatedMap.errors.myString.length, 1, 'Validate ran successfully on change of value.');
 });

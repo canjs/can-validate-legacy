@@ -54,7 +54,7 @@ var Shim = can.Construct.extend({
 	once: function (value, options, name) {
 		var errors = [];
 		var opts = [];
-		var validationOpts = []
+		var validationOpts = [];
 
 		// Check if name was passed, determines which validate method to use
 		if (name) {
