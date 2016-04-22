@@ -32,15 +32,15 @@
   },
   "homepage": "https://github.com/canjs/can-validate",
   "devDependencies": {
-    "can": "^2.3.0-pre.2",
-    "documentjs": "^0.3.0-pre.5",
-    "jquery": "^2.1.4",
-    "steal": "^0.10.5",
-    "steal-qunit": "0.0.4",
-    "steal-tools": "^0.11.0-pre.1",
-    "testee": "^0.2.0",
-    "validate.js": "^0.8.0",
-    "xo": "^0.9.0"
+    "can": "^2.3.23",
+    "documentjs": "^0.4.4",
+    "jquery": "^2.2.3",
+    "steal": "^0.16.2",
+    "steal-qunit": "0.1.1",
+    "steal-tools": "^0.16.1",
+    "testee": "^0.2.5",
+    "validate.js": "^0.9.0",
+    "xo": "^0.14.0"
   },
   "browser": {
     "./can-validate": "./dist/cjs/can-validate/can-validate",
