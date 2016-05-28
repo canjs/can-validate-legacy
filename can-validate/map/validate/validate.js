@@ -61,6 +61,10 @@ var proto = can.Map.prototype;
 var oldSet = proto.__set;
 var ErrorsObj;
 var defaultValidationOpts;
+var config = {
+	errorKeyName: 'errors',
+	validateOptionCacheKey: 'validateOptions'
+};
 
 //TODO: Don't do this, instead create a property during `setup` that is removed
 // during `init`.
@@ -238,18 +242,39 @@ can.extend(can.Map.prototype, {
 proto.__set = function (prop, value, current, success, error) {
 	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true;
-	var validateOpts = getPropDefineBehavior('validate', prop, this.define);
+	var validateOpts;
+	var mapValidateCache;
 	var propIniting = isMapInitializing.call(this);
+	var validateCacheKey = '__' + config.validateOptionCacheKey;
 
+	// Create cache object in map instance, if it doesn't exist
+	if (!this[validateCacheKey]) {
+		this[validateCacheKey] = {};
+	}
+
+	// Shortcut to cache
+	mapValidateCache = this[validateCacheKey];
+
+	// If validate options don't exist in cache for current prop, create them
+	if (mapValidateCache[prop] && !can.isEmptyObject(mapValidateCache[prop])) {
+		validateOpts = mapValidateCache[prop];
+	} else {
+		// Copy current prop's validation properties to cache
+		validateOpts = getPropDefineBehavior('validate', prop, this.define);
+		mapValidateCache[prop] = validateOpts;
+	}
+
+	// Do validate if prop has any validate options
 	if (typeof validateOpts !== 'undefined') {
-		//create validation computes
+		//create validation computes only when initing the map
 		if (propIniting) {
 			validateOpts = can.extend({},
 				defaultValidationOpts,
 				validateOpts,
+				// Find any functions, converts them to computes and returns
+				// nice object for shim to use
 				this._processValidateOpts({key: prop, value: value}, validateOpts)
 			);
-			this.define[prop].validate = validateOpts;
 		}
 		// If validate opts are set and not initing, validate properties
 		// If validate opts are set and initing, validate properties only if validateOnInit is true

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>can-validate Map Plugin Demo</title>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">-->
 	<style>
 		#app {
 			width: 600px;
@@ -62,18 +62,11 @@
 		</script>
 	</div>
 	<script type='text/javascript'>
-		steal('can', 'can-validate/', 'can/map/define/', 'can-validate/map/validate', 'can-validate/shims/validatejs.shim', function(can){
-
+		steal.import('can', 'can-validate', 'can/map/define/', 'can-validate/map/validate/', 'can-validate/shims/validatejs.shim')
+			.then(function(modules){
+				var can = modules[0];
 			var TestMap = can.Map.extend({
 				define: {
-					myVal: {
-						value: 'hello',
-						validate: {
-							required: function () {
-								return this.attr('isRequired') || false;
-							}
-						}
-					},
 					myNum: {
 						value: 'heyo',
 						validate: {
@@ -81,19 +74,29 @@
 							numericality: {
 								greaterThan: 5,
 								message: '^This is a custom message! Hi!'
-							},
-							validateOnInit: true
+							}
 						}
 					},
 					isRequired: {
 						value: false,
 						type: 'boolean'
+					},
+					myVal: {
+						type: 'string',
+						value: '',
+						validate: {
+							presence: function () {
+								return this.attr('isRequired') || false;
+							},
+							validateOnInit: true
+						}
 					}
 				}
 			});
 
 			can.$('#demo').viewModel({
-				myMap: new TestMap({}),
+				myMap: new TestMap({isRequired: true}),
+				myFailMap: new TestMap({testString: 'hello'}),
 				doValidate: function () {
 					this.attr('myMap').validate();
 				}
