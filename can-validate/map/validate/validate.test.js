@@ -18,7 +18,7 @@ var ValidatedMap = can.Map.extend({
 			}
 		},
 		computedProp: {
-			value: '',
+			value: 'hello',
 			validate: {
 				presence: function () {
 					return this.attr('isRequired');
@@ -55,17 +55,34 @@ describe('Validate can.Map define plugin', function () {
 		});
 	});
 
+	/**
+	 * When a map constructor is init'd multiple times, the validate plugin would
+	 * create computes for the props but in the way it processed the props, it
+	 * overwrote the prototype of the map instead of creating a unique version for
+	 * each map instance.
+	 */
 	describe('when creating multiple instances of the same map', function () {
 		beforeEach(function () {
-			validatedMap = new ValidatedMap();
-			secondaryMap = new ValidatedMap({isRequired: true});
+			// Doing this should not affect our control. If bug exists, it will
+			// affect all instances
+			validatedMap = new ValidatedMap({});
+			validatedMap.attr('isRequired', true);
+
+			// this is our control, we wont change any values on this
+			secondaryMap = new ValidatedMap({});
 		});
-		it('first map validates successfully', function () {
-			expect(can.isEmptyObject(validatedMap.errors.computedProp)).to.equal(true);
+		afterEach(function () {
+			validatedMap = null;
+			secondaryMap = null;
 		});
-		it('second map validates, sets error', function () {
-			expect(secondaryMap.attr('computedProp')).to.equal(true);
-			expect(can.isEmptyObject(secondaryMap.errors.computedProp)).to.equal(true);
+		it('control map validates successfully', function () {
+			secondaryMap.attr('computedProp', '');
+			expect(can.isEmptyObject(secondaryMap.attr('errors'))).to.equal(true);
+		});
+		it('other map validates, sets error', function () {
+			validatedMap.attr('computedProp', '');
+			expect(validatedMap.attr('computedProp')).to.equal('');
+			expect(typeof validatedMap.attr('errors.computedProp') !== 'undefined').to.equal(true);
 		});
 	});
 });
