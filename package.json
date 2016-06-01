@@ -1,6 +1,7 @@
 {
   "name": "can-validate",
-  "version": "0.8.3",
+  "version": "0.8.4",
+  "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
     "build": "node ./stealBuild.js",
@@ -33,11 +34,12 @@
   "homepage": "https://github.com/canjs/can-validate",
   "devDependencies": {
     "can": "^2.3.23",
+    "chai": "^3.5.0",
     "documentjs": "^0.4.4",
     "jquery": "^2.2.3",
-    "qunitjs": "^1.23.1",
+    "mocha": "^2.4.5",
     "steal": "^0.16.2",
-    "steal-qunit": "0.1.1",
+    "steal-mocha": "0.0.3",
     "steal-tools": "^0.16.1",
     "testee": "^0.2.5",
     "validate.js": "^0.9.0",
@@ -66,14 +68,26 @@
       "lib": "can-validate"
     },
     "paths": {
-      "validate.js": "./node_modules/validate.js/validate.js"
+      "validate.js": "./node_modules/validate.js/validate.js",
+      "mocha": "node_modules/mocha/mocha.js",
+      "chai": "node_modules/chai/chai.js"
     },
-    "transpiler": "babel"
+    "transpiler": "babel",
+    "meta": {
+      "mocha": {
+        "format": "global",
+        "exports": "mocha"
+      },
+      "chai": {
+        "format": "global",
+        "exports": "chai"
+      }
+    }
   },
   "xo": {
     "envs": [
       "node",
-      "qunit"
+      "mocha"
     ],
     "rules": {
       "no-lonely-if": 0,
@@ -82,7 +96,8 @@
       "no-warning-comments": 0
     },
     "globals": [
-      "steal"
+      "steal",
+      "chai"
     ],
     "ignore": [
       "node_modules/**",

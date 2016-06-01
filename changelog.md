@@ -2,6 +2,31 @@
 @parent can-validate-plugin
 # Change log
 
+## [0.8.4] - 2015-03-02
+
+### Added
+
+- Added tests for issue [#26](https://github.com/canjs/can-validate/issues/26)
+- Added tests for issue [#27](https://github.com/canjs/can-validate/issues/27)
+
+### Changed
+
+- Updated dependencies
+- Switched to Mocha
+- Improved tests
+
+## [0.8.3] - 2015-03-02
+
+### Changed
+
+- Fixed bug when errors was blank would cause console error
+
+## [0.8.2] - 2015-03-02
+
+### Changed
+
+- Improved handling of validation strings, passes strings through to Validate.JS.
+
 ## [0.8.1] - 2015-02-03
 
 ### Added
