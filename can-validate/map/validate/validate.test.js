@@ -18,9 +18,8 @@ var ValidatedMap = can.Map.extend({
 			}
 		},
 		computedProp: {
-			value: 'hello',
 			validate: {
-				presence: function () {
+				required: function () {
 					return this.attr('isRequired');
 				}
 			}
@@ -55,6 +54,28 @@ describe('Validate can.Map define plugin', function () {
 		});
 	});
 
+	describe('when validate method is called', function () {
+		beforeEach(function () {
+			validatedMap = new ValidatedMap({
+				isRequired: true,
+				myNumber: 0
+			});
+		});
+
+		it('resolves computes before calling Validate method', function () {
+			var success = false;
+			try {
+				validatedMap.validate();
+				success = true;
+			}
+			catch (err) {
+				success = err;
+			}
+			expect(success).to.equal(true);
+		});
+
+	});
+
 	/**
 	 * When a map constructor is init'd multiple times, the validate plugin would
 	 * create computes for the props but in the way it processed the props, it
@@ -65,11 +86,11 @@ describe('Validate can.Map define plugin', function () {
 		beforeEach(function () {
 			// Doing this should not affect our control. If bug exists, it will
 			// affect all instances
-			validatedMap = new ValidatedMap({});
+			validatedMap = new ValidatedMap({computedProp: ''});
 			validatedMap.attr('isRequired', true);
 
 			// this is our control, we wont change any values on this
-			secondaryMap = new ValidatedMap({});
+			secondaryMap = new ValidatedMap({computedProp: ''});
 		});
 		afterEach(function () {
 			validatedMap = null;
