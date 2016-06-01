@@ -1,9 +1,13 @@
 /* jshint asi: false */
 import can from 'can';
 import 'can-validate/can-validate';
-import 'steal-qunit';
 
-var Shim = can.Construct.extend({
+import 'chai';
+import 'steal-mocha';
+const expect = chai.expect;
+let errors;
+
+const Shim = can.Construct.extend({
 	once: function (value, options, name) {
 		return {v: value, o: options, n: name};
 	},
@@ -15,23 +19,42 @@ var Shim = can.Construct.extend({
 	}
 });
 
-can.validate.register('testValidator', new Shim());
+describe('can-validate', function () {
+	beforeEach(function () {
+		can.validate.register('testValidator', new Shim());
+	});
 
-test('once', function () {
-	var errors = can.validate.once('foo', 'bar', 'heyo');
-	equal(errors.v, 'foo', 'Value argument passed to shim.');
-	equal(errors.o, 'bar', 'Options argument passed to shim.');
-	equal(errors.n, 'heyo', 'Name argument passed to shim');
-});
+	describe('when once method is called', function () {
+		beforeEach(function () {
+			errors = can.validate.once('foo', 'bar', 'heyo');
+		});
 
-test('isValid', function () {
-	var errors = can.validate.isValid('foo', 'bar');
-	equal(errors.v, 'foo', 'Value argument passed to shim.');
-	equal(errors.o, 'bar', 'Options argument passed to shim.');
-});
+		it('forwards correct arguments to shim', function () {
+			expect(errors.v).to.equal('foo');
+			expect(errors.o).to.equal('bar');
+			expect(errors.n).to.equal('heyo');
+		});
+	});
 
-test('validate', function () {
-	var errors = can.validate.validate('foo', 'bar');
-	equal(errors.v, 'foo', 'Value argument passed to shim.');
-	equal(errors.o, 'bar', 'Options argument passed to shim.');
+	describe('when isValid method is called', function () {
+		beforeEach(function () {
+			errors = can.validate.isValid('foo', 'bar');
+		});
+
+		it('forwards correct arguments to shim', function () {
+			expect(errors.v).to.equal('foo');
+			expect(errors.o).to.equal('bar');
+		});
+	});
+
+	describe('when validate method is called', function () {
+		beforeEach(function () {
+			errors = can.validate.validate('foo', 'bar');
+		});
+
+		it('forwards correct arguments to shim', function () {
+			expect(errors.v).to.equal('foo');
+			expect(errors.o).to.equal('bar');
+		});
+	});
 });
