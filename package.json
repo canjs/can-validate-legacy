@@ -1,6 +1,6 @@
 {
   "name": "can-validate",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
