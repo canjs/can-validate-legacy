@@ -74,7 +74,7 @@ var resolveComputes = function (itemObj, opts) {
 		var actualOpts = item;
 		if (typeof item === 'function') {
 			// create compute and add it to computes array
-			actualOpts = item();
+			actualOpts = item(itemObj.value);
 		}
 		// build the map for the final validations object
 		processedObj[key] = actualOpts;

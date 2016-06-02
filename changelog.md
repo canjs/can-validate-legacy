@@ -2,6 +2,12 @@
 @parent can-validate-plugin
 # Change log
 
+## [0.9.2] - 2015-06-02
+
+### Changed
+
+- Cleaning up code after incorrect merge.
+
 ## [0.9.1] - 2015-06-02
 
 ### Changed
