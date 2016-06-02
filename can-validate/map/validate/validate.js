@@ -182,7 +182,7 @@ can.extend(can.Map.prototype, {
 		var self = this;
 		var validateCache = getValidateFromCache.call(this);
 		can.each(this.define, function (props, key) {
-			if (!validateCache[key]) {
+			if (props.validate && !validateCache[key]) {
 				initProperty.call(self, key, self[key]);
 			}
 		});
@@ -208,11 +208,15 @@ can.extend(can.Map.prototype, {
 	_validate: function () {
 		var validateOpts = getValidateFromCache.call(this);
 		var processedOpts = {};
+		var self = this;
+
 		// Loop through validate options
-		can.each(this, function (value, key) {
-			processedOpts[key] = resolveComputes({key: key, value: value}, validateOpts[key]);
+		can.each(this.define, function (value, key) {
+			if (value.validate) {
+				processedOpts[key] = resolveComputes({key: key, value: self.attr(key)}, validateOpts[key]);
+			}
 		});
-		var errors = can.validate.validate(this, processedOpts);
+		var errors = can.validate.validate(this.serialize(), processedOpts);
 
 		// Process errors if we got them
 		// TODO: This creates a new instance every time.
@@ -288,7 +292,6 @@ can.extend(can.Map.prototype, {
 			if (typeof item === 'function') {
 				// create compute and add it to computes array
 				var compute = can.compute(can.proxy(item, self));
-				//actualOpts = compute(itemObj.value);
 				computes.push({key: key, compute: compute});
 				processedObj[key] = compute;
 			}
