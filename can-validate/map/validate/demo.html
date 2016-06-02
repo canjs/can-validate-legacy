@@ -62,37 +62,40 @@
 		</script>
 	</div>
 	<script type='text/javascript'>
-		steal('can', 'can-validate/', 'can/map/define/', 'can-validate/map/validate', 'can-validate/shims/validatejs.shim', function(can){
-
+		steal.import('can', 'can-validate', 'can/map/define/', 'can-validate/map/validate/', 'can-validate/shims/validatejs.shim')
+			.then(function(modules){
+				var can = modules[0];
 			var TestMap = can.Map.extend({
 				define: {
-					myVal: {
-						value: 'hello',
-						validate: {
-							required: function () {
-								return this.attr('isRequired') || false;
-							}
-						}
-					},
 					myNum: {
 						value: 'heyo',
 						validate: {
 							required: true,
 							numericality: {
-								greaterThan: 5
-							},
-							validateOnInit: true
+								greaterThan: 5,
+								message: '^This is a custom message! Hi!'
+							}
 						}
 					},
 					isRequired: {
 						value: false,
 						type: 'boolean'
+					},
+					myVal: {
+						type: 'string',
+						validate: {
+							required: function () {
+								return this.attr('isRequired') || false;
+							},
+							validateOnInit: true
+						}
 					}
 				}
 			});
 
 			can.$('#demo').viewModel({
-				myMap: new TestMap({}),
+				myMap: new TestMap({isRequired: true}),
+				myFailMap: new TestMap({testString: 'hello'}),
 				doValidate: function () {
 					this.attr('myMap').validate();
 				}

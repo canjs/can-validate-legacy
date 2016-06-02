@@ -1,6 +1,6 @@
 /**
 * @module {can.Construct} can-validate Can-Validate
-* @parent can-validate-library
+* @parent can-validate-plugin
 * @group can-validate.validators 0 Validate Methods
 * @group can-validate.utils 1 Utilities
 * @description
@@ -35,17 +35,6 @@
 */
 
 import can from 'can';
-
-var processMapDefine = function (targetMap) {
-	var targetDefine = targetMap.define;
-	var resp = {values: {}, opts: {}};
-	can.each(targetDefine, function (item, prop) {
-		resp.values[prop] = targetMap.attr(prop);
-		resp.opts[prop] = item.validate;
-	});
-
-	return resp;
-};
 
 // add methods to can
 var Validate = can.Construct.extend({
@@ -156,15 +145,6 @@ var Validate = can.Construct.extend({
 			can.dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
 		}
 		//!steal-remove-end
-
-		// check if can.map was passed, verify if there are validate options
-		// defined then validate all applicable props.
-		if (arguments[0] instanceof can.Map && arguments[0].define) {
-			var mapOptions = processMapDefine(arguments[0]);
-			validateArgs = [];
-			validateArgs.push(mapOptions.values);
-			validateArgs.push(mapOptions.opts);
-		}
 		return this.validator().validate.apply(this, validateArgs);
 	}
 }, {});

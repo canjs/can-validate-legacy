@@ -55,8 +55,9 @@
 				myVal: {
 					required: true,
 					length: {
-						minimum: 6
-					}
+						minimum: 6,
+						message: "My custom message"
+					},
 				},
 				myNum: {
 					required: true,
@@ -75,7 +76,7 @@
 						$label = can.$('label[for=' + $parent.find('.form-control').attr('id') + ']'),
 						val = $parent.data('field');
 
-					var errors = can.validate.once(this.attr(val), validations[val]);
+					var errors = can.validate.once(this.attr(val), validations[val], 'myObjIsAwesome');
 					if (errors) {
 						$parent.addClass('has-error');
 						$label.find('.text-danger').text(errors[0]);
