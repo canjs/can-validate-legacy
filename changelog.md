@@ -2,6 +2,13 @@
 @parent can-validate-plugin
 # Change log
 
+## [0.9.1] - 2015-06-02
+
+### Changed
+
+- Fixed Validate all bug where some properties would not get properly validate when undefined in map instance.
+- Fixed overloading of validate list on validate all method.
+
 ## [0.9.0] - 2015-06-01
 
 ### Changed
