@@ -21,7 +21,7 @@ var validateOpt = {
 		checkStorage.key = arguments[1];
 		checkStorage.opts = arguments[2];
 		checkStorage.map = arguments[3];
-		return {greaterThan:2};
+		return {greaterThan: 2};
 	}
 };
 
