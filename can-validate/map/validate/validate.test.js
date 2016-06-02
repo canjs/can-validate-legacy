@@ -9,6 +9,22 @@ import 'steal-mocha';
 var expect = chai.expect;
 var validatedMap;
 var secondaryMap;
+var checkStorage = {
+	key: '',
+	value: '',
+	opts: {},
+	map: {}
+};
+var validateOpt = {
+	numericality: function () {
+		checkStorage.value = arguments[0];
+		checkStorage.key = arguments[1];
+		checkStorage.opts = arguments[2];
+		checkStorage.map = arguments[3];
+		return {greaterThan:2};
+	}
+};
+
 var ValidatedMap = can.Map.extend({
 	define: {
 		myNumber: {
@@ -28,6 +44,11 @@ var ValidatedMap = can.Map.extend({
 		isRequired: {
 			value: false,
 			type: 'boolean'
+		},
+		anotherComputedProp: {
+			value: 0,
+			validate: validateOpt,
+			type: 'number'
 		}
 	}
 });
@@ -100,6 +121,20 @@ describe('Validate can.Map define plugin', function () {
 			validatedMap.attr('computedProp', '');
 			expect(validatedMap.attr('computedProp')).to.equal('');
 			expect(typeof validatedMap.attr('errors.computedProp') !== 'undefined').to.equal(true);
+		});
+	});
+
+	// #30: Computes should have new value and key name
+	describe('when validate function is passed', function () {
+		beforeEach(function () {
+			validatedMap = new ValidatedMap();
+			validatedMap.attr('anotherComputedProp', 1);
+		});
+		it('compute returns correct arguments', function () {
+			expect(checkStorage.value).to.equal(1);
+			expect(checkStorage.key).to.equal('anotherComputedProp');
+			expect(checkStorage.opts).to.equal(validateOpt);
+			expect(checkStorage.map).to.equal(validatedMap);
 		});
 	});
 });

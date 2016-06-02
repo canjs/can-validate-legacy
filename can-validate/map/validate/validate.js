@@ -74,7 +74,7 @@ var resolveComputes = function (itemObj, opts) {
 		var actualOpts = item;
 		if (typeof item === 'function') {
 			// create compute and add it to computes array
-			actualOpts = item(itemObj.value);
+			actualOpts = item();
 		}
 		// build the map for the final validations object
 		processedObj[key] = actualOpts;
@@ -287,8 +287,10 @@ can.extend(can.Map.prototype, {
 			processedObj[key] = item;
 			if (typeof item === 'function') {
 				// create compute and add it to computes array
-				var compute = can.compute(can.proxy(item, self));
-				//actualOpts = compute(itemObj.value);
+				var compute = can.compute(function () {
+					console.log(arguments);
+					return item.call(self, itemObj.value, itemObj.key, opts, self);
+				});
 				computes.push({key: key, compute: compute});
 				processedObj[key] = compute;
 			}
