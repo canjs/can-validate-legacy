@@ -7,6 +7,8 @@
 ### Changed
 
 - [#26](https://github.com/canjs/can-validate/issues/26) Fixed bug that overwrote validate properties for all instances of a Map or Model. Computes are now cached to a dunder property versus overwriting the main `validate` property.
+- [#27](https://github.com/canjs/can-validate/issues/27) Fixed the `validate` method so it resolves computes. Computes are created from functions passed as validate options so validation can be triggered when compute change is triggered.
+- Improved validate init. Using a better method for detecting when Map is initing.
 
 ## [0.8.4] - 2016-06-01
 
