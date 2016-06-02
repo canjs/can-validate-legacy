@@ -22,7 +22,8 @@ var ValidatedMap = can.Map.extend({
 				required: function () {
 					return this.attr('isRequired');
 				}
-			}
+			},
+			value: ''
 		},
 		isRequired: {
 			value: false,
@@ -54,6 +55,7 @@ describe('Validate can.Map define plugin', function () {
 		});
 	});
 
+	// #27 - Validate method does not resolve computes
 	describe('when validate method is called', function () {
 		beforeEach(function () {
 			validatedMap = new ValidatedMap({
@@ -67,34 +69,28 @@ describe('Validate can.Map define plugin', function () {
 			try {
 				validatedMap.validate();
 				success = true;
-			}
-			catch (err) {
+			} catch (err) {
 				success = err;
 			}
 			expect(success).to.equal(true);
 		});
-
 	});
 
 	/**
-	 * When a map constructor is init'd multiple times, the validate plugin would
-	 * create computes for the props but in the way it processed the props, it
-	 * overwrote the prototype of the map instead of creating a unique version for
-	 * each map instance.
+	 * #26 When a map constructor is init'd multiple times, the validate plugin
+	 * would create computes for the props but in the way it processed the
+	 * props, it overwrote the prototype of the map instead of creating a unique
+	 * version for each map instance.
 	 */
 	describe('when creating multiple instances of the same map', function () {
 		beforeEach(function () {
 			// Doing this should not affect our control. If bug exists, it will
 			// affect all instances
-			validatedMap = new ValidatedMap({computedProp: ''});
+			validatedMap = new ValidatedMap();
 			validatedMap.attr('isRequired', true);
 
 			// this is our control, we wont change any values on this
-			secondaryMap = new ValidatedMap({computedProp: ''});
-		});
-		afterEach(function () {
-			validatedMap = null;
-			secondaryMap = null;
+			secondaryMap = new ValidatedMap();
 		});
 		it('control map validates successfully', function () {
 			secondaryMap.attr('computedProp', '');
