@@ -61,27 +61,25 @@ var proto = can.Map.prototype;
 var oldSet = proto.__set;
 var ErrorsObj;
 var defaultValidationOpts;
+var config = {
+	errorKeyName: 'errors',
+	validateOptionCacheKey: 'validateOptions'
+};
 
-//TODO: Don't do this, instead create a property during `setup` that is removed
-// during `init`.
-var isMapInitializing = function () {
-	var initing = false;
-	// Pre 2.3
-	if (this._init) {
-		initing = this._init === 1 || false;
-	}
+var resolveComputes = function (itemObj, opts) {
+	var processedObj = {};
 
-	// 2.3
-	if (this._initializing) {
-		initing = this._initializing;
-	}
-
-	// post 2.3
-	if (this.__inSetup) {
-		initing = this.__inSetup;
-	}
-
-	return initing;
+	// Loop through each validation option
+	can.each(opts, function (item, key) {
+		var actualOpts = item;
+		if (typeof item === 'function') {
+			// create compute and add it to computes array
+			actualOpts = item(itemObj.value);
+		}
+		// build the map for the final validations object
+		processedObj[key] = actualOpts;
+	});
+	return processedObj;
 };
 
 // Gets properties from the map's define property.
@@ -116,8 +114,79 @@ defaultValidationOpts = {
 	validateOnInit: false
 };
 
+var getValidateFromCache = function () {
+	var validateCacheKey = '__' + config.validateOptionCacheKey;
+
+	// Create cache object in map instance, if it doesn't exist
+	if (!this[validateCacheKey]) {
+		this[validateCacheKey] = {};
+	}
+
+	return this[validateCacheKey];
+};
+
+var initProperty = function (key, value) {
+	var validateOpts;
+	var mapValidateCache;
+	var propIniting;
+
+	// Creat shortcut to cache
+	mapValidateCache = getValidateFromCache.call(this);
+
+	// If validate options don't exist in cache for current prop, create them
+	if (mapValidateCache[key] && !can.isEmptyObject(mapValidateCache[key])) {
+		validateOpts = mapValidateCache[key];
+		propIniting = false;
+	} else {
+		// Copy current prop's validation properties to cache
+		validateOpts = can.extend({}, getPropDefineBehavior('validate', key, this.define));
+		// Need to build computes in the next step
+		propIniting = true;
+	}
+
+	// Do validate if prop has any validate options
+	if (typeof validateOpts !== 'undefined') {
+		//create validation computes only when initing the map
+		if (propIniting) {
+			validateOpts = can.extend({},
+				defaultValidationOpts,
+				validateOpts,
+				// Find any functions, converts them to computes and returns
+				// nice object for shim to use
+				this._processValidateOpts({key: key, value: value}, validateOpts)
+			);
+			mapValidateCache[key] = validateOpts;
+		}
+		return true;
+	}
+	return false;
+};
+
 // add method to prototype that validates entire map
+var oldSetup = proto.setup;
+var oldInit = proto.init;
+proto.setup = function () {
+	this._initValidate = true;
+	oldSetup.apply(this, arguments);
+};
+proto.init = function () {
+	this._initValidation();
+	this._initValidate = false;
+
+	if (oldInit) {
+		oldInit.apply(this, arguments);
+	}
+};
 can.extend(can.Map.prototype, {
+	_initValidation: function () {
+		var self = this;
+		var validateCache = getValidateFromCache.call(this);
+		can.each(this.define, function (props, key) {
+			if (!validateCache[key]) {
+				initProperty.call(self, key, self[key]);
+			}
+		});
+	},
 
 	/**
 	* @function validate Validate
@@ -137,9 +206,16 @@ can.extend(can.Map.prototype, {
 	* "validate all" is defined by the registered shim (`validate`).
 	*/
 	_validate: function () {
-		var errors = can.validate.validate(this);
+		var validateOpts = getValidateFromCache.call(this);
+		var processedOpts = {};
+		// Loop through validate options
+		can.each(this, function (value, key) {
+			processedOpts[key] = resolveComputes({key: key, value: value}, validateOpts[key]);
+		});
+		var errors = can.validate.validate(this, processedOpts);
 
 		// Process errors if we got them
+		// TODO: This creates a new instance every time.
 		this.attr('errors', new ErrorsObj(errors));
 
 		return can.isEmptyObject(errors);
@@ -204,32 +280,30 @@ can.extend(can.Map.prototype, {
 	_processValidateOpts: function (itemObj, opts) {
 		var processedObj = {};
 		var computes = [];
-		var vm = this;
+		var self = this;
 
 		// Loop through each validation option
 		can.each(opts, function (item, key) {
-			var actualOpts = item;
+			processedObj[key] = item;
 			if (typeof item === 'function') {
 				// create compute and add it to computes array
-				var compute = can.compute(can.proxy(item, vm));
+				var compute = can.compute(can.proxy(item, self));
 				//actualOpts = compute(itemObj.value);
-				actualOpts = compute;
 				computes.push({key: key, compute: compute});
+				processedObj[key] = compute;
 			}
-			// build the map for the final validations object
-			processedObj[key] = actualOpts;
 		});
 
 		// Using the computes array, create necessary listeners
 		// We do this afterwards instead of inline so we can have access
 		// to the final set of validation options.
 		can.each(computes, function (item) {
-			item.compute.bind('change', function (ev, newVal) {
-				processedObj[item.key] = newVal;
-				itemObj.value = vm.attr(itemObj.key);
-				vm._validateOne(itemObj, processedObj);
+			item.compute.bind('change', function () {
+				itemObj.value = self.attr(itemObj.key);
+				self._validateOne(itemObj, processedObj);
 			});
 		});
+
 		return processedObj;
 	}
 });
@@ -238,22 +312,15 @@ can.extend(can.Map.prototype, {
 proto.__set = function (prop, value, current, success, error) {
 	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true;
-	var validateOpts = getPropDefineBehavior('validate', prop, this.define);
-	var propIniting = isMapInitializing.call(this);
+	var checkValidate = initProperty.call(this, prop, value);
+	var validateOpts = getValidateFromCache.call(this)[prop];
+	var mapIniting = this._initValidate;
 
-	if (typeof validateOpts !== 'undefined') {
-		//create validation computes
-		if (propIniting) {
-			validateOpts = can.extend({},
-				defaultValidationOpts,
-				validateOpts,
-				this._processValidateOpts({key: prop, value: value}, validateOpts)
-			);
-			this.define[prop].validate = validateOpts;
-		}
+	if (checkValidate !== false) {
+		validateOpts = resolveComputes({key: prop, value: value}, validateOpts);
 		// If validate opts are set and not initing, validate properties
 		// If validate opts are set and initing, validate properties only if validateOnInit is true
-		if ((validateOpts && !propIniting) || (validateOpts && propIniting && validateOpts.validateOnInit)) {
+		if ((validateOpts && !mapIniting) || (validateOpts && mapIniting && validateOpts.validateOnInit)) {
 			// Validate item
 			allowSet = this._validateOne({key: prop, value: value}, validateOpts);
 		}

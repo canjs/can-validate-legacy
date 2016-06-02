@@ -2,7 +2,15 @@
 @parent can-validate-plugin
 # Change log
 
-## [0.8.4] - 2015-03-02
+## [0.9.0] - 2015-06-01
+
+### Changed
+
+- [#26](https://github.com/canjs/can-validate/issues/26) Fixed bug that overwrote validate properties for all instances of a Map or Model. Computes are now cached to a dunder property versus overwriting the main `validate` property.
+- [#27](https://github.com/canjs/can-validate/issues/27) Fixed the `validate` method so it resolves computes. Computes are created from functions passed as validate options so validation can be triggered when compute change is triggered.
+- Improved validate init. Using a better method for detecting when Map is initing.
+
+## [0.8.4] - 2016-06-01
 
 ### Added
 
@@ -15,19 +23,19 @@
 - Switched to Mocha
 - Improved tests
 
-## [0.8.3] - 2015-03-02
+## [0.8.3] - 2016-04-21
 
 ### Changed
 
 - Fixed bug when errors was blank would cause console error
 
-## [0.8.2] - 2015-03-02
+## [0.8.2] - 2016-03-02
 
 ### Changed
 
 - Improved handling of validation strings, passes strings through to Validate.JS.
 
-## [0.8.1] - 2015-02-03
+## [0.8.1] - 2016-02-03
 
 ### Added
 
