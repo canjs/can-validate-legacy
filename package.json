@@ -1,19 +1,22 @@
 {
   "name": "can-validate",
-  "version": "0.9.2",
+  "version": "1.0.0-pre.0",
   "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
-    "build": "node ./steal-build.js",
-    "develop": "http-server -p 3000 -c-1 -o",
-    "lint": "xo",
-    "test": "xo && testee --browsers firefox can-validate.test.html",
-    "prepublish": "npm run build",
-    "publish": "git push origin --tags",
+    "preversion": "npm test && npm run build",
+    "version": "git commit -am \"Update dist for release\" && git checkout -b release && git add -f dist/",
+    "postversion": "git push --tags && git checkout master && git branch -D release && git push",
+    "testee": "testee test.html --browsers firefox",
+    "test": "npm run jshint && npm run testee",
+    "jshint": "jshint *.js --config",
+    "release:pre": "npm version prerelease && npm publish",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "document": "documentjs"
+    "build": "node build.js",
+    "document": "bit-docs",
+    "develop": "done-serve --static --develop --port 8080"
   },
   "repository": {
     "type": "git",
@@ -33,17 +36,11 @@
   },
   "homepage": "https://github.com/canjs/can-validate",
   "devDependencies": {
-    "can": "^2.3.23",
-    "chai": "^3.5.0",
-    "documentjs": "^0.4.4",
-    "jquery": "^2.2.3",
-    "mocha": "^2.5.3",
-    "steal": "^0.16.2",
-    "steal-mocha": "0.0.3",
-    "steal-tools": "^0.16.1",
-    "testee": "^0.2.5",
-    "validate.js": "^0.10.0",
-    "xo": "^0.15.1"
+    "jshint": "^2.9.1",
+    "steal": "^0.16.35",
+    "steal-qunit": "^0.1.1",
+    "steal-tools": "^0.16.0",
+    "testee": "^0.2.4"
   },
   "browser": {
     "./can-validate": "./dist/cjs/can-validate/can-validate",
@@ -64,9 +61,6 @@
     "npmDependencies": [
       "steal-qunit"
     ],
-    "directories": {
-      "lib": "can-validate"
-    },
     "paths": {
       "validate.js": "./node_modules/validate.js/validate.js",
       "mocha": "node_modules/mocha/mocha.js",
@@ -104,5 +98,8 @@
       "dist/**",
       "docs/**"
     ]
+  },
+  "dependencies": {
+    "can-util": "^3.0.12"
   }
 }

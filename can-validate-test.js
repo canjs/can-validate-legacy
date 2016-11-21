@@ -1,13 +1,9 @@
 /* jshint asi: false */
-import can from 'can';
-import 'can-validate/can-validate';
 
-import 'chai';
-import 'steal-mocha';
-const expect = chai.expect;
-let errors;
+var QUnit = require("steal-qunit");
+var validate = require("can-validate");
 
-const Shim = can.Construct.extend({
+var Shim = {
 	once: function (value, options, name) {
 		return {v: value, o: options, n: name};
 	},
@@ -17,11 +13,26 @@ const Shim = can.Construct.extend({
 	validate: function (values, options) {
 		return {v: values, o: options};
 	}
+};
+
+QUnit.module("can-validate", {
+	setup: function(){
+		validate.register('testValidator', Shim);
+	}
 });
 
+QUnit.test("when once method is called",function(){
+	var errors = validate.once('foo', 'bar', 'heyo');
+
+	QUnit.equal(errors.v,'foo');
+	QUnit.equal(errors.o,'bar');
+	QUnit.equal(errors.n,'heyo');
+
+});
+/*
 describe('can-validate', function () {
 	beforeEach(function () {
-		can.validate.register('testValidator', new Shim());
+
 	});
 
 	describe('when once method is called', function () {
@@ -57,4 +68,4 @@ describe('can-validate', function () {
 			expect(errors.o).to.equal('bar');
 		});
 	});
-});
+});*/

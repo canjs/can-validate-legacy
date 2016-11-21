@@ -33,11 +33,11 @@
 *
 *
 */
-
-import can from 'can';
+var dev = require("can-util/js/dev/dev");
+var namespace = require("can-util/namespace");
 
 // add methods to can
-var Validate = can.Construct.extend({
+var Validate = {
 
 	/*
 	* @description The current validator ID to use when can.validate methods are called.
@@ -96,7 +96,7 @@ var Validate = can.Construct.extend({
 	isValid: function () {
 		//!steal-remove-start
 		if (!this._validatorId) {
-			can.dev.warn('A validator library is required for can.validate to work properly.');
+			dev.warn('A validator library is required for can.validate to work properly.');
 		}
 		//!steal-remove-end
 		return this.validator().isValid.apply(this, arguments);
@@ -118,7 +118,7 @@ var Validate = can.Construct.extend({
 	once: function () {
 		//!steal-remove-start
 		if (!this._validatorId) {
-			can.dev.warn('A validator library is required for can.validate to work properly.');
+			dev.warn('A validator library is required for can.validate to work properly.');
 		}
 		//!steal-remove-end
 		return this.validator().once.apply(this, arguments);
@@ -139,16 +139,16 @@ var Validate = can.Construct.extend({
 		var validateArgs = arguments;
 		//!steal-remove-start
 		if (!this._validatorId) {
-			can.dev.warn('A validator library is required for can.validate to work properly.');
+			dev.warn('A validator library is required for can.validate to work properly.');
 		}
 		if (typeof arguments[0] !== 'object') {
-			can.dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
+			dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
 		}
 		//!steal-remove-end
 		return this.validator().validate.apply(this, validateArgs);
 	}
-}, {});
+};
 
-can.validate = Validate;
+namespace.validate = Validate;
 
-export default can;
+module.exports = Validate;
