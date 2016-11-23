@@ -1,78 +1,27 @@
-/**
-* @module {?} can.Map.validate Map Plugin
-* @parent can-validate
-*
-* @description The can.Map plugin will works alongside can.Map.define to add validation
-* to properties on a can.Map. Importing the plugin, validation library, and a shim will
-* allow the ability to dynamically check values against validation configuration. errors
-* are stored on the can.Map instance and are observable.
-*
-* @body
-*
-* ## Initialization
-* Import the validation library, validate plugin and a shim to immediately use the
-* can.Map.validate plugin.
-* ```js
-* import 'validatejs';
-* import 'can-validate/map/validate';
-* import 'can-validate/shims/validatejs.shim';
-*```
-*
-* ## Usage
-*
-* Using can-validate Map plugin only requires two extra actions,
-*
-* - add a validate object to the desired property
-* - add a check in the view for the errors object
-*
-* The validate object depends on the desired valdiation library. The examples
-* below use ValidateJS.
-*
-*```js
-* var ViewModel = can.Map.extend({
-*   define: {
-*     name: {
-*       value: '',
-*       validate: {
-*         required: true
-*       }
-*     }
-*   }
-* });
-* var viewModel = new ViewModel({});
-* viewModel.validate();
-* // `errors` will have an error because the `name` value is empty
-* //  and required is true.
-* viewModel.attr('errors');
-* viewModel.attr('name', 'Juan');
-* viewModel.attr('errors'); // => Errors is now empty!
-*```
-*
-* ## Demo
-* @demo ./can-validate/map/validate/demo.html
-*
-*
-*/
+var $ = require("jquery");
+var namespace = require("can-util/namespace");
+var Map = require("can-map");
+var each = require("can-util/js/each/each");
+var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
+var validate = require("can-validate-legacy");
+var compute = require("can-compute");
 
-import can from 'can';
-import 'can-validate/can-validate';
-
-var proto = can.Map.prototype;
+var proto = Map.prototype;
 var oldSet = proto.__set;
 var ErrorsObj;
 var defaultValidationOpts;
 var config = {
-	errorKeyName: 'errors',
-	validateOptionCacheKey: 'validateOptions'
+	errorKeyName: "errors",
+	validateOptionCacheKey: "validateOptions"
 };
 
 var resolveComputes = function (itemObj, opts) {
 	var processedObj = {};
 
 	// Loop through each validation option
-	can.each(opts, function (item, key) {
+	each(opts, function (item, key) {
 		var actualOpts = item;
-		if (typeof item === 'function') {
+		if (typeof item === "function") {
 			// create compute and add it to computes array
 			actualOpts = item(itemObj.value);
 		}
@@ -82,14 +31,14 @@ var resolveComputes = function (itemObj, opts) {
 	return processedObj;
 };
 
-// Gets properties from the map's define property.
+// Gets properties from the map"s define property.
 var getPropDefineBehavior = function (behavior, attr, define) {
 	var prop;
 	var defaultProp;
 
 	if (define) {
 		prop = define[attr];
-		defaultProp = define['*'];
+		defaultProp = define["*"];
 
 		if (prop && prop[behavior] !== undefined) {
 			return prop[behavior];
@@ -102,9 +51,9 @@ var getPropDefineBehavior = function (behavior, attr, define) {
 };
 
 // Default Map for errors object. Useful to add instance helpers
-ErrorsObj = can.Map.extend({}, {
+ErrorsObj = Map.extend({}, {
 	hasErrors: function () {
-		return !can.isEmptyObject(this.attr());
+		return !isEmptyObject(this.attr());
 	}
 });
 
@@ -115,7 +64,7 @@ defaultValidationOpts = {
 };
 
 var getValidateFromCache = function () {
-	var validateCacheKey = '__' + config.validateOptionCacheKey;
+	var validateCacheKey = "__" + config.validateOptionCacheKey;
 
 	// Create cache object in map instance, if it doesn't exist
 	if (!this[validateCacheKey]) {
@@ -134,21 +83,21 @@ var initProperty = function (key, value) {
 	mapValidateCache = getValidateFromCache.call(this);
 
 	// If validate options don't exist in cache for current prop, create them
-	if (mapValidateCache[key] && !can.isEmptyObject(mapValidateCache[key])) {
+	if (mapValidateCache[key] && !isEmptyObject(mapValidateCache[key])) {
 		validateOpts = mapValidateCache[key];
 		propIniting = false;
 	} else {
-		// Copy current prop's validation properties to cache
-		validateOpts = can.extend({}, getPropDefineBehavior('validate', key, this.define));
+		// Copy current prop"s validation properties to cache
+		validateOpts = $.extend({}, getPropDefineBehavior("validate", key, this.define));
 		// Need to build computes in the next step
 		propIniting = true;
 	}
 
 	// Do validate if prop has any validate options
-	if (typeof validateOpts !== 'undefined') {
+	if (typeof validateOpts !== "undefined") {
 		//create validation computes only when initing the map
 		if (propIniting) {
-			validateOpts = can.extend({},
+			validateOpts = $.extend({},
 				defaultValidationOpts,
 				validateOpts,
 				// Find any functions, converts them to computes and returns
@@ -177,11 +126,11 @@ proto.init = function () {
 		oldInit.apply(this, arguments);
 	}
 };
-can.extend(can.Map.prototype, {
+$.extend(Map.prototype, {
 	_initValidation: function () {
 		var self = this;
 		var validateCache = getValidateFromCache.call(this);
-		can.each(this.define, function (props, key) {
+		each(this.define, function (props, key) {
 			if (props.validate && !validateCache[key]) {
 				initProperty.call(self, key, self[key]);
 			}
@@ -211,22 +160,22 @@ can.extend(can.Map.prototype, {
 		var self = this;
 
 		// Loop through validate options
-		can.each(this.define, function (value, key) {
+		each(this.define, function (value, key) {
 			if (value.validate) {
 				processedOpts[key] = resolveComputes({key: key, value: self.attr(key)}, validateOpts[key]);
 			}
 		});
-		var errors = can.validate.validate(this.serialize(), processedOpts);
+		var errors = validate.validate(this.serialize(), processedOpts);
 
 		// Process errors if we got them
 		// TODO: This creates a new instance every time.
-		this.attr('errors', new ErrorsObj(errors));
+		this.attr("errors", new ErrorsObj(errors));
 
-		return can.isEmptyObject(errors);
+		return isEmptyObject(errors);
 	},
 	/**
 	* @function _validateOne Validate One
-	* @description Main method used by `can.Map.define` setter when a property changes.
+	* @description Main method used by `Map.define` setter when a property changes.
 	*  Runs validation on a property. Actual behavior of "validate one" is defined
 	*  by the registered shim (`once`).
 	*
@@ -244,17 +193,17 @@ can.extend(can.Map.prototype, {
 		var allowSet = true;
 
 		// run validation
-		errors = can.validate.once(item.value, can.extend({}, opts), item.key);
+		errors = validate.once(item.value, $.extend({}, opts), item.key);
 
 		// Process errors if we got them
 		if (errors && errors.length > 0) {
 			// Create errors property if doesn't exist
-			if (!this.attr('errors')) {
-				this.attr('errors', new ErrorsObj({}));
+			if (!this.attr("errors")) {
+				this.attr("errors", new ErrorsObj({}));
 			}
 
 			// Apply error response to observable
-			this.attr('errors').attr(item.key, errors);
+			this.attr("errors").attr(item.key, errors);
 
 			// Don't set value if `mustValidate` is true
 			if (opts.mustValidate === true) {
@@ -262,8 +211,8 @@ can.extend(can.Map.prototype, {
 			}
 		} else {
 			// clear errors for this property if they exist
-			if (this.attr('errors') && this.attr('errors').attr(item.key)) {
-				this.attr('errors').removeAttr(item.key);
+			if (this.attr("errors") && this.attr("errors").attr(item.key)) {
+				this.attr("errors").removeAttr(item.key);
 			}
 		}
 
@@ -287,21 +236,21 @@ can.extend(can.Map.prototype, {
 		var self = this;
 
 		// Loop through each validation option
-		can.each(opts, function (item, key) {
+		each(opts, function (item, key) {
 			processedObj[key] = item;
-			if (typeof item === 'function') {
+			if (typeof item === "function") {
 				// create compute and add it to computes array
-				var compute = can.compute(can.proxy(item, self));
-				computes.push({key: key, compute: compute});
-				processedObj[key] = compute;
+				var newCompute = compute($.proxy(item, self));
+				computes.push({key: key, compute: newCompute});
+				processedObj[key] = newCompute;
 			}
 		});
 
 		// Using the computes array, create necessary listeners
 		// We do this afterwards instead of inline so we can have access
 		// to the final set of validation options.
-		can.each(computes, function (item) {
-			item.compute.bind('change', function () {
+		each(computes, function (item) {
+			item.compute.bind("change", function () {
 				itemObj.value = self.attr(itemObj.key);
 				self._validateOne(itemObj, processedObj);
 			});
@@ -311,7 +260,7 @@ can.extend(can.Map.prototype, {
 	}
 });
 
-// Override the prototype's __set with a more validate-y one.
+// Override the prototype"s __set with a more validate-y one.
 proto.__set = function (prop, value, current, success, error) {
 	// allowSet is changed only if validation options exist and validation returns errors
 	var allowSet = true;
@@ -329,7 +278,7 @@ proto.__set = function (prop, value, current, success, error) {
 		}
 	}
 
-	// Call old __set, in most cases, this will be the define plugin's set.
+	// Call old __set, in most cases, this will be the define plugin"s set.
 	if (allowSet) {
 		oldSet.call(this, prop, value, current, success, error);
 	}

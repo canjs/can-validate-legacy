@@ -1,5 +1,5 @@
 {
-  "name": "can-validate",
+  "name": "can-validate-legacy",
   "version": "1.0.0-pre.0",
   "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
@@ -36,70 +36,62 @@
   },
   "homepage": "https://github.com/canjs/can-validate",
   "devDependencies": {
+    "bit-docs": "0.0.7",
+    "can-compute": "^3.0.3",
+    "can-map": "^3.0.2",
+    "can-map-define": "^3.0.0",
+    "can-stache": "^3.0.8",
+    "done-serve": "^0.2.5",
+    "jquery": "^3.1.1",
     "jshint": "^2.9.1",
     "steal": "^0.16.35",
     "steal-qunit": "^0.1.1",
+    "steal-stache": "^3.0.1",
     "steal-tools": "^0.16.0",
-    "testee": "^0.2.4"
+    "testee": "^0.2.4",
+    "validate.js": "^0.11.1"
   },
   "browser": {
     "./can-validate": "./dist/cjs/can-validate/can-validate",
     "./map/validate": "./dist/cjs/can-validate/map/validate/validate",
     "./validations": "./dist/cjs/can-validate/validations",
-    "./shims/validatejs.shim": "./dist/cjs/can-validate/shims/validatejs.shim",
-    "./shims/validations.shim": "./dist/cjs/can-validate/shims/validations.shim"
+    "./shims/validatejs.shim": "./dist/cjs/can-validate/shims/validatejs.shim"
   },
   "system": {
     "ignoreBrowser": true,
     "npmIgnore": [
       "documentjs",
       "testee",
-      "steal-tools",
-      "xo"
+      "steal-tools"
     ],
     "npmAlgorithm": "flat",
     "npmDependencies": [
       "steal-qunit"
     ],
     "paths": {
-      "validate.js": "./node_modules/validate.js/validate.js",
-      "mocha": "node_modules/mocha/mocha.js",
-      "chai": "node_modules/chai/chai.js"
+      "validate.js": "./node_modules/validate.js/validate.js"
     },
-    "transpiler": "babel",
-    "meta": {
-      "mocha": {
-        "format": "global",
-        "exports": "mocha"
-      },
-      "chai": {
-        "format": "global",
-        "exports": "chai"
-      }
-    }
-  },
-  "xo": {
-    "envs": [
-      "node",
-      "mocha"
-    ],
-    "rules": {
-      "no-lonely-if": 0,
-      "no-else-return": 0,
-      "spaced-comment": 0,
-      "no-warning-comments": 0
-    },
-    "globals": [
-      "steal",
-      "chai"
-    ],
-    "ignore": [
-      "node_modules/**",
-      "dist/**",
-      "docs/**"
-    ]
+    "transpiler": "babel"
   },
   "dependencies": {
     "can-util": "^3.0.12"
+  },
+  "bit-docs": {
+    "dependencies": {
+      "bit-docs-glob-finder": "^0.0.5",
+      "bit-docs-dev": "^0.0.3",
+      "bit-docs-js": "^0.0.3",
+      "bit-docs-generate-readme": "^0.0.8"
+    },
+    "glob": {
+      "pattern": "**/*.{js,md}",
+      "ignore": "node_modules/**/*"
+    },
+    "readme": {
+      "apis": [
+        "can-validate-legacy"
+      ]
+    },
+    "parent": "can-validate-legacy"
   }
 }

@@ -1,38 +1,3 @@
-/**
-* @module {can.Construct} can-validate Can-Validate
-* @parent can-validate-plugin
-* @group can-validate.validators 0 Validate Methods
-* @group can-validate.utils 1 Utilities
-* @description
-*  The core of can.validate, this script adds abstraction methods to can.validate
-*   that call corresponding methods in the chosen shim. The shim does any value and
-*   validation option manipulation, calls library validation methods, and returns errors.
-*
-*  Shims, in the case of errors, should return an array of errors. Otherwise, the
-*   shim should return undefined.
-*
-* @signature 'can.validate'
-* Validate is a can.Construct that is set to can.validate. It is possible to create
-* an instance for the purpose of storing errors in the instance. It is recommended
-* to use can.Map, can.Map.define, and can.Map.validate instead.
-*
-* @body
-*
-* ## Initialization
-* Require/Import `can-validate` into your application after `can` and `can.validate`
-*  will be available immediately. Make sure to also load your libarary and the
-*  appropriate shim.
-* ```js
-* import 'validatejs';
-* import 'can-validate/can-validate';
-* import 'can-validate/shims/validatejs.shim';
-*```
-* You can use any of the methods at `can.validate`.
-*
-* @demo ./can-validate/demo.html
-*
-*
-*/
 var dev = require("can-util/js/dev/dev");
 var namespace = require("can-util/namespace");
 
@@ -40,19 +5,17 @@ var namespace = require("can-util/namespace");
 var Validate = {
 
 	/*
-	* @description The current validator ID to use when can.validate methods are called.
+	* The current validator ID to use when can.validate methods are called.
 	*/
 	_validatorId: '',
 
 	/*
-	* @description A map of validator libraries loaded into can.validate.
+	* A map of validator libraries loaded into can.validate.
 	*/
 	_validators: {},
 
 	/**
-	* @function can-validate.validator Validator
-	* @parent can-validate.utils
-	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Registers a library with can.validate. The last one registered is the default library.
 	* Override the default by changing `_validatorId` to the key of the desired registered library.
 	* ```js
 	* Validate.register('validatejs',validatejs);
@@ -65,9 +28,7 @@ var Validate = {
 	},
 
 	/**
-	* @function can-validate.register Register
-	* @parent can-validate.utils
-	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Registers a library with can.validate. The last one registered is the default library.
 	* Override the default by changing `_validatorId` to the key of the desired registered library.
 	* ```js
 	* Validate.register('validatejs',validatejs);
@@ -81,9 +42,7 @@ var Validate = {
 	},
 
 	/**
-	* @function can-validate.isValid Is Valid
-	* @parent can-validate.validators
-	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Registers a library with can.validate. The last one registered is the default library.
 	* Override the default by changing `_validatorId` to the key of the desired registered library.
 	* ```js
 	* Validate.isValid('', {}, 'myVal');
@@ -103,9 +62,7 @@ var Validate = {
 	},
 
 	/**
-	* @function can-validate.once Once
-	* @parent can-validate.validators
-	* @description Registers a library with can.validate. The last one registered is the default library.
+	* Registers a library with can.validate. The last one registered is the default library.
 	* Override the default by changing `_validatorId` to the key of the desired registered library.
 	* ```js
 	* Validate.once('', {}, 'myVal');
@@ -125,9 +82,6 @@ var Validate = {
 	},
 
 	/**
-	* @function can-validate.validate Validate
-	* @parent can-validate.validators
-	* @description
 	* ```js
 	* Validate.validate({},{});
 	* ```
