@@ -1,44 +1,25 @@
-/**
-* @module {can.Construct} validatejs-shim ValidateJS Shim
-* @parent can-validate-shims
-* @description
-* This shim requires ValidateJS in the consuming app's package.json. It processes
-* the passed in options so they can be properly used by the ValidateJS libarary.
-* @body
-*
-* ## Initialization
-* Import ValidateJS, validate plugin and this shim to immediately use the
-* ValidateJS in a CanJS project plugin.
-* ```js
-* import 'validatejs';
-* import 'can-validate/can-validate';
-* import 'can-validate/shims/validatejs.shim';
-*```
-*
-*/
-
-import can from 'can-validate/can-validate';
-import validatejs from 'validate.js';
+var validate = require("can-validate-legacy");
+var validatejs = require("validate.js");
 
 var processOptions = function (opts) {
 	// check required
-	if (typeof opts.required !== 'undefined') {
+	if (typeof opts.required !== "undefined") {
 		opts.presence = opts.required;
 		delete opts.required;
 	}
 
-	if (opts.hasOwnProperty('mustValidate')) {
+	if (opts.hasOwnProperty("mustValidate")) {
 		delete opts.mustValidate;
 	}
 
-	if (opts.hasOwnProperty('validateOnInit')) {
+	if (opts.hasOwnProperty("validateOnInit")) {
 		delete opts.validateOnInit;
 	}
 
 	return opts;
 };
 
-var Shim = can.Construct.extend({
+var shim = {
 
 	/**
 	* @function once Once
@@ -120,7 +101,7 @@ var Shim = can.Construct.extend({
 
 		return validatejs(values, processedOpts);
 	}
-});
+};
 
 // Register the shim
-can.validate.register('validatejs', new Shim());
+validate.register("validatejs", shim);
