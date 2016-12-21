@@ -1,7 +1,5 @@
-@page can-validate-shims Shims
-@parent can-validate-plugin
-
-# Can-Validate Shims
+@function can-validate-legacy.shims Shims
+@parent can-validate-legacy
 
 Shims allow the flexibility of using any validation library with `can.validate`.
 Creating a shim requires just three methods, `isValid`, `once`, and `validate`.

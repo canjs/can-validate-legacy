@@ -1,6 +1,17 @@
-@page changelog Changelog
-@parent can-validate-plugin
-# Change log
+@page can-validate-legacy.changelog Changelog
+@parent can-validate-legacy
+
+## UNRELEASED - 2016-11-23
+
+### Changed
+
+- Restructured repository, main files live in root now; no `can-validate` subdirectory now.
+- Refactored tests to match CanJS standard of using QUnit.
+- Refactored codebase to match CanJS standard of using ES5.
+- Restructured Demos after repo changes
+- Updated dependencies to use CanJS 3.0 modules
+- Moved repository to `can-validate-legacy`. Original repository will continue but will soon change to match CanJS 3.0 patterns.
+- Updated docs to work with Bit-Docs
 
 ## [0.9.2] - 2015-06-02
 
