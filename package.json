@@ -48,8 +48,7 @@
     "steal-qunit": "^0.1.1",
     "steal-stache": "^3.0.1",
     "steal-tools": "^0.16.1",
-    "testee": "^0.3.0",
-    "validate.js": "^0.11.1"
+    "testee": "^0.3.0"
   },
   "browser": {
     "./can-validate": "./dist/cjs/can-validate/can-validate",
@@ -74,7 +73,8 @@
     "transpiler": "babel"
   },
   "dependencies": {
-    "can-util": "^3.0.12"
+    "can-util": "^3.0.12",
+    "validate.js": "^0.11.1"
   },
   "bit-docs": {
     "dependencies": {
