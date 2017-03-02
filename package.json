@@ -44,11 +44,11 @@
     "done-serve": "^0.2.5",
     "jquery": "^3.1.1",
     "jshint": "^2.9.1",
-    "steal": "^0.16.35",
-    "steal-qunit": "^0.1.1",
+    "steal": "^1.2.10",
+    "steal-qunit": "^1.0.1",
     "steal-stache": "^3.0.1",
-    "steal-tools": "^0.16.1",
-    "testee": "^0.3.0"
+    "steal-tools": "^1.1.2",
+    "testee": "^0.3.1"
   },
   "browser": {
     "./can-validate": "./dist/cjs/can-validate/can-validate",
@@ -56,21 +56,19 @@
     "./validations": "./dist/cjs/can-validate/validations",
     "./shims/validatejs.shim": "./dist/cjs/can-validate/shims/validatejs.shim"
   },
-  "system": {
+  "steal": {
     "ignoreBrowser": true,
     "npmIgnore": [
       "documentjs",
       "testee",
       "steal-tools"
     ],
-    "npmAlgorithm": "flat",
     "npmDependencies": [
       "steal-qunit"
     ],
     "paths": {
       "validate.js": "./node_modules/validate.js/validate.js"
-    },
-    "transpiler": "babel"
+    }
   },
   "dependencies": {
     "can-util": "^3.0.12",
