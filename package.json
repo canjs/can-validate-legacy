@@ -71,7 +71,7 @@
     }
   },
   "dependencies": {
-    "can-util": "^3.0.12",
+    "can-util": "3.3.4",
     "validate.js": "^0.11.1"
   },
   "bit-docs": {
