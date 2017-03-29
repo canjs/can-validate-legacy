@@ -37,7 +37,7 @@
   "homepage": "https://github.com/canjs/can-validate-legacy",
   "devDependencies": {
     "bit-docs": "0.0.7",
-    "can-compute": "^3.0.3",
+    "can-compute": "3.0.7",
     "can-map": "^3.0.2",
     "can-map-define": "^3.0.0",
     "can-stache": "^3.0.8",
