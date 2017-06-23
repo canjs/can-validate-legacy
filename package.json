@@ -1,16 +1,16 @@
 {
   "name": "can-validate-legacy",
-  "version": "1.0.2",
+  "version": "1.1.0-pre.1",
   "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
     "preversion": "npm test && npm run build",
     "version": "git commit -am \"Update dist for release\" && git checkout -b release && git add -f dist/",
-    "postversion": "git push --tags && git checkout master && git branch -D release && git push",
+    "postversion": "git push --tags && git checkout can-reflect && git branch -D release && git push",
     "testee": "testee test.html --browsers firefox",
     "test": "npm run jshint && npm run testee",
     "jshint": "jshint *.js --config",
-    "release:pre": "npm version prerelease && npm run build && npm publish",
+    "release:pre": "npm version prerelease && npm run build && npm publish --tag=pre",
     "release:patch": "npm version patch && npm run build && npm publish",
     "release:minor": "npm version minor && npm run build && npm publish",
     "release:major": "npm version major && npm run build && npm publish",
@@ -37,10 +37,10 @@
   "homepage": "https://github.com/canjs/can-validate-legacy",
   "devDependencies": {
     "bit-docs": "0.0.7",
-    "can-compute": "^3.0.3",
-    "can-map": "^3.0.2",
-    "can-map-define": "^3.0.0",
-    "can-stache": "^3.0.8",
+    "can-compute": "^3.1.0-pre.11",
+    "can-map": "^3.1.0-pre.11",
+    "can-map-define": "^3.1.0-pre.1",
+    "can-stache": "^3.1.0-pre.5",
     "done-serve": "^0.2.5",
     "jquery": "^3.1.1",
     "jshint": "^2.9.1",
@@ -71,7 +71,7 @@
     }
   },
   "dependencies": {
-    "can-util": "^3.0.12",
+    "can-util": "^3.9.0-pre.4",
     "validate.js": "^0.11.1"
   },
   "bit-docs": {
