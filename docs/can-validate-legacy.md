@@ -1,5 +1,6 @@
 @module {Object} can-validate-legacy
-@parent can-legacy
+@parent can-data-validation
+@collection can-legacy
 @group can-validate-legacy.core 1 can-validate-legacy Core
 @group can-validate-legacy.map-plugin 2 can-map Plugin
 @group can-validate-legacy.shims 3 Shims
