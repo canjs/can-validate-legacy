@@ -22,6 +22,7 @@ var Validate = {
 	* ```
 	* @param {string} id The key name of the validator library.
 	* @param {object|function} validator The validator libarary. Only pass instances.
+	* @hide
 	*/
 	validator: function () {
 		return this._validators[this._validatorId];
@@ -35,6 +36,7 @@ var Validate = {
 	* ```
 	* @param {string} id The key name of the validator library.
 	* @param {object|function} validator The validator libarary. Only pass instances.
+	* @hide
 	*/
 	register: function (id, validator) {
 		this._validatorId = id;
@@ -51,6 +53,7 @@ var Validate = {
 	* @param {object} options Validation config object, structure depends on the
 	*  validation library used.
 	* @param {string} name Optional. The key name of the value.
+	* @hide
 	*/
 	isValid: function () {
 		//!steal-remove-start
@@ -71,6 +74,7 @@ var Validate = {
 	* @param {object} options Validation config object, structure depends on the
 	*  validation library used.
 	* @param {string} name Optional. The key name of the value.
+	* @hide
 	*/
 	once: function () {
 		//!steal-remove-start
@@ -88,6 +92,7 @@ var Validate = {
 	* @param {object} values A map of the different objects to validate.
 	* @param {object} options Validation config object, structure depends on the
 	*  validation library used.
+	* @hide
 	*/
 	validate: function () {
 		var validateArgs = arguments;
