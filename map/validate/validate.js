@@ -151,6 +151,7 @@ $.extend(Map.prototype, {
 
 	/**
 	* @function _validate _Validate
+	* @hide
 	* @description Runs validation on the entire map instance. Actual behavior of
 	* "validate all" is defined by the registered shim (`validate`).
 	*/
@@ -175,6 +176,7 @@ $.extend(Map.prototype, {
 	},
 	/**
 	* @function _validateOne Validate One
+	* @hide
 	* @description Main method used by `Map.define` setter when a property changes.
 	*  Runs validation on a property. Actual behavior of "validate one" is defined
 	*  by the registered shim (`once`).
@@ -221,6 +223,7 @@ $.extend(Map.prototype, {
 
 	/**
 	* @function _processValidateOpts Process Validate Opts
+	* @hide
 	* @description Allows the ability to pass computes in validation properties,
 	* this allows for things like making a property required based on the value on
 	* another property.
