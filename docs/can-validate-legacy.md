@@ -54,7 +54,7 @@ Now, can-validate can be used in two ways, either in a can-map or standalone.
 Using the plugin for can-map requires the can-map-define plugins as well.
 
 ```javascript
-import 'can-validate-legacy/map/validate';
+import 'can-validate-legacy/map/validate/validate';
 import 'can/map/define/define';
 ```
 
