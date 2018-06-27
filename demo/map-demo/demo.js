@@ -1,3 +1,4 @@
+"use strict";
 var $ = require('jquery');
 var Map = require('can-map');
 require('can-map-define');

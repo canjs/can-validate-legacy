@@ -1,3 +1,4 @@
+"use strict";
 var $ = require("jquery");
 var namespace = require("can-util/namespace");
 var Map = require("can-map");

@@ -1,3 +1,4 @@
+"use strict";
 var $ = require('jquery');
 var Map = require('can-map');
 var validate = require('can-validate-legacy');
