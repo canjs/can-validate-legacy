@@ -11,11 +11,11 @@ var deepAssign = function() {
 	var out = {};
 
 	for (var i=0; i<objects.length; i++) {
-		assign(out, objects[i])
+		assign(out, objects[i]);
 	}
 
 	return out;
-}
+};
 
 var proto = Map.prototype;
 var oldSet = proto.__set;
