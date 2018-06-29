@@ -1,10 +1,21 @@
-var $ = require("jquery");
+var assign = require("can-assign");
 var namespace = require("can-util/namespace");
 var Map = require("can-map");
 var each = require("can-util/js/each/each");
 var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
 var validate = require("can-validate-legacy");
 var compute = require("can-compute");
+
+var deepAssign = function() {
+	var objects = [].slice.call(arguments);
+	var out = {};
+
+	for (var i=0; i<objects.length; i++) {
+		assign(out, objects[i])
+	}
+
+	return out;
+}
 
 var proto = Map.prototype;
 var oldSet = proto.__set;
@@ -88,7 +99,7 @@ var initProperty = function (key, value) {
 		propIniting = false;
 	} else {
 		// Copy current prop"s validation properties to cache
-		validateOpts = $.extend({}, getPropDefineBehavior("validate", key, this.define));
+		validateOpts = assign({}, getPropDefineBehavior("validate", key, this.define));
 		// Need to build computes in the next step
 		propIniting = true;
 	}
@@ -97,7 +108,7 @@ var initProperty = function (key, value) {
 	if (typeof validateOpts !== "undefined") {
 		//create validation computes only when initing the map
 		if (propIniting) {
-			validateOpts = $.extend({},
+			validateOpts = deepAssign(
 				defaultValidationOpts,
 				validateOpts,
 				// Find any functions, converts them to computes and returns
@@ -126,7 +137,7 @@ proto.init = function () {
 		oldInit.apply(this, arguments);
 	}
 };
-$.extend(Map.prototype, {
+assign(Map.prototype, {
 	_initValidation: function () {
 		var self = this;
 		var validateCache = getValidateFromCache.call(this);
@@ -195,7 +206,7 @@ $.extend(Map.prototype, {
 		var allowSet = true;
 
 		// run validation
-		errors = validate.once(item.value, $.extend({}, opts), item.key);
+		errors = validate.once(item.value, assign({}, opts), item.key);
 
 		// Process errors if we got them
 		if (errors && errors.length > 0) {
@@ -243,7 +254,7 @@ $.extend(Map.prototype, {
 			processedObj[key] = item;
 			if (typeof item === "function") {
 				// create compute and add it to computes array
-				var newCompute = compute($.proxy(item, self));
+				var newCompute = compute(item.bind(self));
 				computes.push({key: key, compute: newCompute});
 				processedObj[key] = newCompute;
 			}
