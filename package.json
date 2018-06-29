@@ -9,7 +9,7 @@
     "postversion": "git push --tags && git checkout master && git branch -D release && git push",
     "testee": "testee test.html --browsers firefox",
     "test": "npm run detect-cycle && npm run jshint && npm run testee",
-    "jshint": "jshint *.js --config",
+    "jshint": "jshint *.js map/**/*.js --config",
     "release:pre": "npm version prerelease && npm run build && npm publish --tag=pre",
     "release:patch": "npm version patch && npm run build && npm publish",
     "release:minor": "npm version minor && npm run build && npm publish",
@@ -70,6 +70,7 @@
     }
   },
   "dependencies": {
+    "can-assign": "^1.1.1",
     "can-util": "^3.9.0",
     "validate.js": "<0.12.0"
   }
