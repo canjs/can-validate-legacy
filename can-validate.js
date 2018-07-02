@@ -58,8 +58,10 @@ var Validate = {
 	*/
 	isValid: function () {
 		//!steal-remove-start
-		if (!this._validatorId) {
-			dev.warn('A validator library is required for can.validate to work properly.');
+		if (process.env.NODE_ENV !== 'production') {
+			if (!this._validatorId) {
+				dev.warn('A validator library is required for can.validate to work properly.');
+			}
 		}
 		//!steal-remove-end
 		return this.validator().isValid.apply(this, arguments);
@@ -79,8 +81,10 @@ var Validate = {
 	*/
 	once: function () {
 		//!steal-remove-start
-		if (!this._validatorId) {
-			dev.warn('A validator library is required for can.validate to work properly.');
+		if (process.env.NODE_ENV !== 'production') {
+			if (!this._validatorId) {
+				dev.warn('A validator library is required for can.validate to work properly.');
+			}
 		}
 		//!steal-remove-end
 		return this.validator().once.apply(this, arguments);
@@ -98,11 +102,13 @@ var Validate = {
 	validate: function () {
 		var validateArgs = arguments;
 		//!steal-remove-start
-		if (!this._validatorId) {
-			dev.warn('A validator library is required for can.validate to work properly.');
-		}
-		if (typeof arguments[0] !== 'object') {
-			dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
+		if (process.env.NODE_ENV !== 'production') {
+			if (!this._validatorId) {
+				dev.warn('A validator library is required for can.validate to work properly.');
+			}
+			if (typeof arguments[0] !== 'object') {
+				dev.warn('Attempting to pass single value to validate, use can.validator.once instead.');
+			}
 		}
 		//!steal-remove-end
 		return this.validator().validate.apply(this, validateArgs);
