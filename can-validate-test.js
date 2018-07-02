@@ -1,5 +1,4 @@
 /* jshint asi: false */
-var namespace = require("can-util/namespace");
 var Map = require("can-map");
 var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
 var QUnit = require("steal-qunit");
