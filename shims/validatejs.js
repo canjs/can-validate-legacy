@@ -1,3 +1,4 @@
+"use strict";
 var validate = require("can-validate-legacy");
 var validatejs = require("validate.js");
 

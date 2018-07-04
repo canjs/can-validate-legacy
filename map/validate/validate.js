@@ -1,5 +1,6 @@
+"use strict";
 var assign = require("can-assign");
-var namespace = require("can-util/namespace");
+
 var Map = require("can-map");
 var each = require("can-util/js/each/each");
 var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
