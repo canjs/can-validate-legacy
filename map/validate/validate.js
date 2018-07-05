@@ -2,8 +2,7 @@
 var assign = require("can-assign");
 
 var Map = require("can-map");
-var each = require("can-util/js/each/each");
-var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
+var canReflect = require("can-reflect");
 var validate = require("can-validate-legacy");
 var compute = require("can-compute");
 
@@ -16,6 +15,10 @@ var deepAssign = function() {
 	}
 
 	return out;
+};
+
+var isEmptyObject = function(value) {
+	return canReflect.size(value) === 0;
 };
 
 var proto = Map.prototype;
@@ -31,7 +34,7 @@ var resolveComputes = function (itemObj, opts) {
 	var processedObj = {};
 
 	// Loop through each validation option
-	each(opts, function (item, key) {
+	canReflect.eachKey(opts, function (item, key) {
 		var actualOpts = item;
 		if (typeof item === "function") {
 			// create compute and add it to computes array
@@ -142,7 +145,7 @@ assign(Map.prototype, {
 	_initValidation: function () {
 		var self = this;
 		var validateCache = getValidateFromCache.call(this);
-		each(this.define, function (props, key) {
+		canReflect.eachKey(this.define, function (props, key) {
 			if (props.validate && !validateCache[key]) {
 				initProperty.call(self, key, self[key]);
 			}
@@ -173,7 +176,7 @@ assign(Map.prototype, {
 		var self = this;
 
 		// Loop through validate options
-		each(this.define, function (value, key) {
+		canReflect.eachKey(this.define, function (value, key) {
 			if (value.validate) {
 				processedOpts[key] = resolveComputes({key: key, value: self.attr(key)}, validateOpts[key]);
 			}
@@ -251,7 +254,7 @@ assign(Map.prototype, {
 		var self = this;
 
 		// Loop through each validation option
-		each(opts, function (item, key) {
+		canReflect.eachKey(opts, function (item, key) {
 			processedObj[key] = item;
 			if (typeof item === "function") {
 				// create compute and add it to computes array
@@ -264,7 +267,7 @@ assign(Map.prototype, {
 		// Using the computes array, create necessary listeners
 		// We do this afterwards instead of inline so we can have access
 		// to the final set of validation options.
-		each(computes, function (item) {
+		canReflect.each(computes, function (item) {
 			item.compute.bind("change", function () {
 				itemObj.value = self.attr(itemObj.key);
 				self._validateOne(itemObj, processedObj);

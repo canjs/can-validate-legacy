@@ -1,6 +1,6 @@
 "use strict";
-var dev = require("can-util/js/dev/dev");
-var namespace = require("can-util/namespace");
+var dev = require("can-log/dev/dev");
+var namespace = require("can-namespace");
 
 // add methods to can
 var Validate = {
