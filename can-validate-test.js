@@ -1,6 +1,6 @@
 /* jshint asi: false */
 var Map = require("can-map");
-var isEmptyObject = require("can-util/js/is-empty-object/is-empty-object");
+var canReflect = require("can-reflect");
 var QUnit = require("steal-qunit");
 
 require("can-map-define");
@@ -33,6 +33,10 @@ var ValidatedMap = Map.extend({
 		}
 	}
 });
+
+var isEmptyObject = function(value) {
+	return canReflect.size(value) === 0;
+};
 
 QUnit.module("Map Validate Plugin");
 
