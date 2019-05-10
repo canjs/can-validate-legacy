@@ -40,19 +40,19 @@ var isEmptyObject = function(value) {
 
 QUnit.module("Map Validate Plugin");
 
-QUnit.test("when validateOnInit is not set, it should not run validation",function(){
+QUnit.test("when validateOnInit is not set, it should not run validation",function(assert) {
 	validatedMap = new ValidatedMap();
-	QUnit.ok(isEmptyObject(validatedMap.errors));
+	assert.ok(isEmptyObject(validatedMap.errors));
 });
 
-QUnit.test("validations run when value is set",function(){
+QUnit.test("validations run when value is set",function(assert) {
 	validatedMap = new ValidatedMap();
 	validatedMap.attr("myNumber", "");
-	QUnit.equal(validatedMap.errors.myNumber.length, 1);
+	assert.equal(validatedMap.errors.myNumber.length, 1);
 });
 
 // #27 - Validate method does not resolve computes
-QUnit.test("when validate method is called, resolves computes before calling Validate method",function(){
+QUnit.test("when validate method is called, resolves computes before calling Validate method",function(assert) {
 	validatedMap = new ValidatedMap({
 		isRequired: true,
 		myNumber: 0
@@ -64,7 +64,7 @@ QUnit.test("when validate method is called, resolves computes before calling Val
 	} catch (err) {
 		success = err;
 	}
-	QUnit.ok(success);
+	assert.ok(success);
 });
 
 /**
@@ -73,7 +73,7 @@ QUnit.test("when validate method is called, resolves computes before calling Val
  * props, it overwrote the prototype of the map instead of creating a unique
  * version for each map instance.
  */
-QUnit.test("when creating multiple instances of the same map, each instance is discrete",function(){
+QUnit.test("when creating multiple instances of the same map, each instance is discrete",function(assert) {
 	// Doing this should not affect our control. If bug exists, it will
 	// affect all instances
 	validatedMap = new ValidatedMap();
@@ -83,12 +83,12 @@ QUnit.test("when creating multiple instances of the same map, each instance is d
 	secondaryMap = new ValidatedMap();
 
 	secondaryMap.attr("computedProp", "");
-	QUnit.equal(isEmptyObject(secondaryMap.attr("errors")), true, 'control map validates successfully');
+	assert.equal(isEmptyObject(secondaryMap.attr("errors")), true, 'control map validates successfully');
 
 	// other map validates, sets error
 	validatedMap.attr("computedProp", "");
-	QUnit.equal(validatedMap.attr("computedProp"), "");
-	QUnit.ok(typeof validatedMap.attr("errors.computedProp") !== "undefined", 'other map validates, sets error');
+	assert.equal(validatedMap.attr("computedProp"), "");
+	assert.ok(typeof validatedMap.attr("errors.computedProp") !== "undefined", 'other map validates, sets error');
 });
 
 var ShimValidatedMap = Map.extend({
@@ -112,24 +112,24 @@ var ShimValidatedMap = Map.extend({
 });
 
 QUnit.module("Validate.js Shim", {
-	setup: function(){
+	beforeEach: function(assert) {
 		validatedMap = new ShimValidatedMap({});
 	}
 });
 
-QUnit.test("validates on init by default",function(){
-	QUnit.equal(validatedMap.attr('errors').myNumber.length, 1);
+QUnit.test("validates on init by default",function(assert) {
+	assert.equal(validatedMap.attr('errors').myNumber.length, 1);
 });
 
-QUnit.test("validates on init by default",function(){
-	QUnit.equal(validatedMap.errors.myNumber.length, 1);
+QUnit.test("validates on init by default",function(assert) {
+	assert.equal(validatedMap.errors.myNumber.length, 1);
 });
 
-QUnit.test("does not validate on init, when validate on init is false",function(){
-	QUnit.equal(validatedMap.errors.myString, undefined);
+QUnit.test("does not validate on init, when validate on init is false",function(assert) {
+	assert.equal(validatedMap.errors.myString, undefined);
 });
 
-QUnit.test("runs validation on value",function(){
+QUnit.test("runs validation on value",function(assert) {
 	validatedMap.attr("myString", "");
-	QUnit.equal(validatedMap.errors.myString.length, 1);
+	assert.equal(validatedMap.errors.myString.length, 1);
 });
