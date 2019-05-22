@@ -73,7 +73,7 @@
     "can-log": "<2.0.0",
     "can-map": "^4.1.2",
     "can-namespace": "<2.0.0",
-    "can-reflect": "^1.0.0",
+    "can-reflect": "^1.17.10",
     "validate.js": "<0.12.0"
   }
 }
