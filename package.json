@@ -1,6 +1,6 @@
 {
   "name": "can-validate-legacy",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "can-validate.js",
   "description": "Validation plugin for CanJS that provides an abstraction layer to your validation library of choice (Shim may be required).",
   "scripts": {
